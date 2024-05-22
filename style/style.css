@@ -1,0 +1,175 @@
+body {
+    height: 100%;
+    padding: 0;
+}
+
+p, ul {
+    margin: 0;
+}
+
+.navbar {
+    padding: 10px 20px;
+}
+
+.navbar-brand img {
+    background-position: center;
+    width: 150px;
+}
+
+.nav-link {
+    color: #384C67;
+    font-weight: 600;
+}
+
+.drawer-menu {
+    display: none;
+}
+
+.offcanvas {
+    display: none;
+}
+
+.main-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.title {
+    color: #384C67;
+    font-weight: bold;
+}
+
+.subtitle {
+    font-size: 14px;
+}
+
+.boxes {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.box {
+    width: 35%;
+    margin: 5% 2.5% 0% 2.5%;
+    padding: 2.5%;
+    border: 1px solid black;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.box h5 {
+    color: #384C67;
+}
+
+.box p {
+    font-size: 14px;
+    margin: 5% 0%;
+}
+
+.main-button {
+    border-radius: 10px;
+    border: 0px;
+    background-color: #F6911B;
+    color: black;
+    padding: 5% 15%;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.submit-button {
+    align-self: center;
+    border-radius: 10px;
+    border: 1px solid black;
+    background-color: #F6911B;
+    color: black;
+    padding: 2.5% 15%;
+    font-size: 14px;
+    font-weight: bold;
+    transition: 0.5s all;
+}
+
+.submit-button:hover {
+    background-color: #384C67;
+    color: white;
+}
+
+.hotline {
+    padding: 2.5%;
+    margin: 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border-radius: 10px;
+    background-color: #D54444;
+}
+
+label {
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.hint {
+    color: red;
+    font-size: 12px;
+}
+
+input {
+    border-radius: 10px;
+    border: 1px solid;
+    padding: 15px;
+    margin: 10px 0px;
+}
+
+select {
+    margin: 10px 0px;
+}
+
+.notice {
+    font-size: 14px;
+    padding: 10px;
+    margin: 15px 0px;
+    border-radius: 10px;
+    background-color: #D1E7DD;
+    color: #0a3622;
+}
+
+.notice ul li {
+    font-weight: 600;
+}
+
+.checkboxes {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+}
+
+.checkboxes label {
+    padding-left: 20px;
+}
+
+.formulir {
+    padding: 0% 15%;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    border-radius: 10px;
+    margin-bottom: 5%;
+    /* border: 1px solid black; */
+}
+
+@media screen and (max-width: 768px) {
+    .offcanvas {
+        display: block;
+    }
+
+    .drawer-menu {
+        display: block;
+    }
+}
