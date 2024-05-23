@@ -60,6 +60,7 @@ p, ul {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: flex-start;
 }
 
 .box h5 {
@@ -76,9 +77,23 @@ p, ul {
     border: 0px;
     background-color: #F6911B;
     color: black;
+    padding: 10% 25%;
+    font-size: 14px;
+    font-weight: bold;
+    text-wrap: nowrap;
+    transition: 0.5s all;
+}
+
+.login-button {
+    border-radius: 10px;
+    border: 0px;
+    background-color: #F6911B;
+    color: black;
     padding: 5% 15%;
     font-size: 14px;
     font-weight: bold;
+    text-wrap: nowrap;
+    transition: 0.5s all;
 }
 
 .submit-button {
@@ -93,7 +108,7 @@ p, ul {
     transition: 0.5s all;
 }
 
-.submit-button:hover {
+.main-button:hover, .submit-button:hover {
     background-color: #384C67;
     color: white;
 }
@@ -142,6 +157,7 @@ select {
 
 .notice ul li {
     font-weight: 600;
+    margin: 5px 0px;
 }
 
 .checkboxes {
@@ -154,7 +170,7 @@ select {
     padding-left: 20px;
 }
 
-.formulir {
+.formulir, .cek-laporan {
     padding: 0% 15%;
     display: flex;
     width: 100%;
@@ -162,6 +178,23 @@ select {
     border-radius: 10px;
     margin-bottom: 5%;
     /* border: 1px solid black; */
+}
+
+.admin-access {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 2.5%;
+}
+
+.login-section {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    border-radius: 10px;
+    margin-top: 2%;
+    padding: 10%;
 }
 
 @media screen and (max-width: 768px) {

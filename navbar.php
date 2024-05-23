@@ -24,7 +24,7 @@ session_start();
                 <a class="nav-link" href="report.php">Lapor Perundungan</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="about-us.php">Cek Status Laporan</a>
+                <a class="nav-link" href="check-report.php">Cek Status Laporan</a>
             </li>
         </ul>
     </div>
@@ -38,13 +38,13 @@ session_start();
         <div class="offcanvas-body">
             <ul class="navbar-nav">
                 <li class="nav-item active">
-                    <a class="nav-link">Beranda </a>
+                    <a class="nav-link" href="index.php">Beranda </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link">Lapor Perundungan</a>
+                    <a class="nav-link" href="report.php">Lapor Perundungan</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link">Cek Status Laporan</a>
+                    <a class="nav-link" href="check-report.php">Cek Status Laporan</a>
                 </li>
             </ul>
         </div>
