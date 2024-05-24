@@ -3,13 +3,13 @@ require_once("connect.php");
 $result = "";
 session_start();
 if (isset($_SESSION["username"]) && isset($_SESSION['id'])) {
-    header("Location: dashboard-admin.php");
+    header("Location: dashboard.php");
 } else {
     if ($_POST) {
         $username = $_POST["username"];
         $password = $_POST["password"];
 
-        $sql = "SELECT * FROM accounts WHERE username = '$username' AND password = '$password' AND id_wijk = '6'";
+        $sql = "SELECT * FROM accounts WHERE username = '$username' AND password = '$password'";
         $q = mysqli_query($conn, $sql);
 
         while ($row = mysqli_fetch_assoc($q)) {

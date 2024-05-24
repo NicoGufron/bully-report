@@ -57,17 +57,18 @@ if (isset($_POST["submit-korban"])) {
     $postLokasiKejadian = $_POST['lokasi-kejadian'];
     $postDeskripsiKejadian = $_POST['deskripsi-kejadian'];
     $postNomorHP = $_POST['nomor-hp'];
+    $postBuktiKejadian = $_POST['bukti-kejadian'];
     $postEmailPelapor = $_POST['email-pelapor'];
     
     $nomorPengajuan = '';
     $nomorPengajuan = generateNomorPengajuan();
 
-    $values = $sql . "('$postJenisKasus', '', '$postStatusPelapor', '$dampakList', '$postNamaKorban', '$postEmailPelapor', '$postNomorHP', '$postNimKorban', '$postJurusanKorban', '$postNamaPelaku', '$postWaktuKejadian', '$postFrekuensiKejadian', '$postLokasiKejadian', '$postDeskripsiKejadian', '$nomorPengajuan')";
+    $values = $sql . "('$postJenisKasus', '', '$postStatusPelapor', '$dampakList', '$postNamaKorban', '$postEmailPelapor', '$postNomorHP', '$postNimKorban', '$postJurusanKorban', '$postNamaPelaku', '$postWaktuKejadian', '$postFrekuensiKejadian', '$postLokasiKejadian', '$postDeskripsiKejadian', '$postBuktiKejadian', '$nomorPengajuan')";
 
     $q = mysqli_query($conn, $values);
 
 } else if (isset($_POST["submit-saksi"])) {
-
+    
 }
 ?>
 
@@ -86,14 +87,14 @@ if (isset($_POST["submit-korban"])) {
                         </ul>
                     </div>
 
+                    <label>Status pelapor (<span style="color:red">*</span>)</label>
+                    <select id="form-selector" class="form-control" name="status-pelapor">
+                        <option value="" selected readonly hidden>Silahkan dipilih</option>
+                        <option value="korban">Korban</option>
+                        <option value="saksi">Saksi</option>
+                    </select>
                     <!-- Formulir Korban -->
                     <form method="post" id="korban-form">
-                        <label>Status pelapor (<span style="color:red">*</span>)</label>
-                        <select id="form-selector" class="form-control" name="status-pelapor">
-                            <option value="" selected readonly hidden>Silahkan dipilih</option>
-                            <option value="korban">Korban</option>
-                            <option value="saksi">Saksi</option>
-                        </select>
                         <label>Jenis Perundungan (<span style="color:red">*</span>)</label>
                         <select class="form-control" name="jenis-kasus">
                             <option value="" selected readonly hidden>Silahkan dipilih</option>
@@ -140,6 +141,11 @@ if (isset($_POST["submit-korban"])) {
                         <input class="form-control" type="text" name="lokasi-kejadian">
                         <label>Deskripsi Kejadian (<span style="color:red">*</span>)</label>
                         <textarea class="form-control" name="deskripsi-kejadian" col="5" rows="5" placeholder="Tuliskan deskripsi kejadian secara detil. "></textarea>
+                        <label>Bukti Kejadian (Opsional)</label>
+                        <input class="form-control" type="text" name="bukti-kejadian">
+                        <div class='notice' style='display: flex;flex-direction: row; justify-content: space-between; align-items: baseline'>
+                            <i class="fa-solid fa-circle-info" style="padding-left: 10px;padding-right: 10px"></i><p><strong>Mohon untuk memastikan link yang diberikan dapat diakses oleh siapapun. Universitas Kalbis menjaga kerahasiaan data anda</strong></p>
+                        </div>
                         <label>Nomor yang dapat dihubungi (<span style="color:red">*</span>)</label>
                         <input class="form-control" type="text" name="nomor-hp">
                         <label>Email yang dapat dihubungi (<span style="color:red">*</span>)</label>
@@ -152,12 +158,12 @@ if (isset($_POST["submit-korban"])) {
 
                     <!-- Formulir Saksi -->
                     <form method="post" id="saksi-form" style="display: none">
-                        <label>Status pelapor (<span style="color:red">*</span>)</label>
+                        <!-- <label>Status pelapor (<span style="color:red">*</span>)</label>
                         <select id="form-selector" class="form-control">
                             <option value="" selected readonly hidden>Silahkan dipilih</option>
                             <option value="korban">Korban</option>
                             <option value="saksi">Saksi</option>
-                        </select>
+                        </select> -->
                         <label>Nama pelapor (Opsional)</label>
                         <input class="form-control" type="text" name="nama-korban">
                         <label>NIK pelapor (Opsional)</label>
@@ -190,9 +196,14 @@ if (isset($_POST["submit-korban"])) {
                             <option>Setiap Hari</option>
                         </select>
                         <label>Lokasi Kejadian (<span style="color:red">*</span>)</label>
-                        <input class="form-control" type="text" name="nama-korban">
+                        <input class="form-control" type="text" name="lokasi-kejadian">
                         <label>Deskripsi Kejadian (<span style="color:red">*</span>)</label>
                         <textarea class="form-control" col="5" rows="5" placeholder="Tuliskan deskripsi kejadian secara detil. "></textarea>
+                        <label>Bukti Kejadian (Opsional)</label>
+                        <input class="form-control" type="text" name="bukti-kejadian">
+                        <div class='notice' style='display: flex;flex-direction: row; justify-content: space-between; align-items: baseline'>
+                            <i class="fa-solid fa-circle-info" style="padding-left: 10px;padding-right: 10px"></i><p><strong>Mohon untuk memastikan link yang diberikan dapat diakses oleh siapapun. Universitas Kalbis menjaga kerahasiaan data anda</strong></p>
+                        </div>
                         <label>Nomor yang dapat dihubungi (<span style="color:red">*</span>)</label>
                         <input class="form-control" type="text" name="nomor-hp">
                         <label>Email yang dapat dihubungi (<span style="color:red">*</span>)</label>
@@ -208,9 +219,9 @@ if (isset($_POST["submit-korban"])) {
 
     <script>
         $(document).ready(function() {
-            $("#korban-form").hide();
-            $("#saksi-form").show();
-            $('#korban-form #form-selector, #saksi-form #form-selector').change(function() {
+            $("#korban-form").show();
+            $("#saksi-form").hide();
+            $('#form-selector').change(function() {
                 var selectedValue = $(this).val();
                 console.log(selectedValue);
                 if (selectedValue === "korban") {

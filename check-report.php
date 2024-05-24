@@ -19,6 +19,63 @@
 require_once("connect.php");
 include("navbar.php");
 
+$result = "";
+
+if ($_POST) {
+    $nomorPengajuan = $_POST['nomor-pengajuan'];
+    $sql = "SELECT * FROM reports WHERE nomor_pengajuan = '$nomorPengajuan'";
+
+    $q = mysqli_query($conn, $sql);
+
+    while ($row = mysqli_fetch_assoc($q)) {
+        $jenisKasus = $row["jenis_kasus"];
+        $namaKorban = $row['nama_korban'];
+        $statusPelapor = $row['status_pelapor'];
+        $nimKorban = $row['nim_korban'];
+        $dampakKasus = $row['dampak_kasus'];
+        $jurusanKorban = $row['jurusan_korban'];
+        $namaPelaku = $row['nama_pelaku'];
+        $waktuKejadian = $row['waktu_kejadian'];
+        $frekuenseiKejadian = $row['frekuensi_kejadian'];
+        $lokasiKejadian = $row['lokasi_kejadian'];
+        $deskripsiKejadian = $row['deskripsi_kejadian'];
+
+        $convertedWaktuKejadian = date('d M Y', strtotime($waktuKejadian));
+
+        $convertedDeskripsi = nl2br($deskripsiKejadian);
+
+        $result = "
+            <div>
+                <span class='top-form'>
+                    <h5 class='title' style='text-align:center'>LAPORAN PERUNDUNGAN</h5>
+                    <p class='nomor-pengajuan'>#$nomorPengajuan</p>
+                </span>
+                <label class='result-label'>Jenis Kasus</label>
+                <p>$jenisKasus</p>
+                <label class='result-label'>Nama Korban</label>
+                <p>$namaKorban</p>
+                <label class='result-label'>NIM Korban</label>
+                <p>$nimKorban</p>
+                <label class='result-label'>Dampak Kasus</label>
+                <p>$dampakKasus</p>
+                <label class='result-label'>Jurusan Korban</label>
+                <p>$jurusanKorban</p>
+                <label class='result-label'>Nama Pelaku</label>
+                <p>$namaPelaku</p>
+                <label class='result-label'>Waktu Kejadian</label>
+                <p>$convertedWaktuKejadian</p>
+                <label class='result-label'>Frekuensi Kejadian</label>
+                <p>$frekuenseiKejadian</p>
+                <label class='result-label'>Lokasi Kejadian</label>
+                <p>$lokasiKejadian</p>
+                <label class='result-label'>Deskripsi Kejadian</label>
+                <p>$convertedDeskripsi</p>
+            </div>
+        ";
+    }
+    
+}
+
 ?>
 
 <body>
@@ -35,9 +92,14 @@ include("navbar.php");
                     <label for="nomor-pengajuan">Nomor Pengajuan: </label>
                     <div style="display: flex; flex-direction: row">
                         <input class="form-control" type="number" name="nomor-pengajuan" placeholder="Cth: 123456">
-                        <input type="submit" value="Cek Laporan">
+                        <input type="submit" value="Cek Laporan" class="submit-button" style="margin-left: 20px">
                     </div>
                 </form>
+                <?php if ($result != ""):?>
+                <div class="result-form">
+                    <?= $result ?>
+                </div>
+                <?php endif;?>
             </div>
         </section>
     </div>
