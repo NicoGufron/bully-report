@@ -46,9 +46,13 @@ h4 {
     width: 150px;
 }
 
-.nav-link {
+.offcanvas-nav-link, .nav-link {
     color: #384C67;
     font-weight: 600;
+}
+
+.offcanvas-nav-link {
+    padding: 5%;
 }
 
 
@@ -240,7 +244,7 @@ select {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
 }
 
 .nomor-pengajuan {
@@ -288,6 +292,16 @@ select {
 
 .reports {
     margin-top: 5%;
+}
+
+.sidenote {
+    display: flex;
+    flex-direction: column;
+}
+
+.custom-select {
+    width: 25%;
+
 }
 
 @media screen and (max-width: 768px) {

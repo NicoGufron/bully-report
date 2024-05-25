@@ -29,6 +29,8 @@ if ($_POST) {
 
     while ($row = mysqli_fetch_assoc($q)) {
         $jenisKasus = $row["jenis_kasus"];
+        $namaPelapor = $row['nama_pelapor'];
+        $nimPelapor = $row['nim_pelapor'];
         $namaKorban = $row['nama_korban'];
         $statusPelapor = $row['status_pelapor'];
         $nimKorban = $row['nim_korban'];
@@ -39,39 +41,101 @@ if ($_POST) {
         $frekuenseiKejadian = $row['frekuensi_kejadian'];
         $lokasiKejadian = $row['lokasi_kejadian'];
         $deskripsiKejadian = $row['deskripsi_kejadian'];
+        $buktiKejadian = $row['bukti_kejadian'];
+        $progress = $row['progress'];
+
+        $progressReport = "";
+
+        if ($progress === "1") {
+            $progressReport = "Sedang Berjalan";
+        } else if ($progress === "2") {
+            $progressReport= "Selesai";
+        }
 
         $convertedWaktuKejadian = date('d M Y', strtotime($waktuKejadian));
 
         $convertedDeskripsi = nl2br($deskripsiKejadian);
 
-        $result = "
-            <div>
-                <span class='top-form'>
-                    <h5 class='title' style='text-align:center'>LAPORAN PERUNDUNGAN</h5>
-                    <p class='nomor-pengajuan'>#$nomorPengajuan</p>
-                </span>
-                <label class='result-label'>Jenis Kasus</label>
-                <p>$jenisKasus</p>
-                <label class='result-label'>Nama Korban</label>
-                <p>$namaKorban</p>
-                <label class='result-label'>NIM Korban</label>
-                <p>$nimKorban</p>
-                <label class='result-label'>Dampak Kasus</label>
-                <p>$dampakKasus</p>
-                <label class='result-label'>Jurusan Korban</label>
-                <p>$jurusanKorban</p>
-                <label class='result-label'>Nama Pelaku</label>
-                <p>$namaPelaku</p>
-                <label class='result-label'>Waktu Kejadian</label>
-                <p>$convertedWaktuKejadian</p>
-                <label class='result-label'>Frekuensi Kejadian</label>
-                <p>$frekuenseiKejadian</p>
-                <label class='result-label'>Lokasi Kejadian</label>
-                <p>$lokasiKejadian</p>
-                <label class='result-label'>Deskripsi Kejadian</label>
-                <p>$convertedDeskripsi</p>
-            </div>
-        ";
+        if ($buktiKejadian == "") {
+            $buktiKejadian = "Tidak ada bukti kejadian";
+        } else if (strpos($buktiKejadian, "https://") !== false){
+            $buktiKejadian = "<a target='_blank' href='$buktiKejadian'>$buktiKejadian</a>";
+        }
+
+        if ($namaPelapor === "") {
+
+            $result = "
+                <div>
+                    <span class='top-form'>
+                        <div style='display: flex;flex-direction: column'>
+                            <h5 class='title' style='text-align:center'>LAPORAN PERUNDUNGAN</h5>
+                            <p class='subtitle'>Status: <strong>$progressReport</strong></p> 
+                        </div>
+                        <p class='nomor-pengajuan'>#$nomorPengajuan</p>
+                    </span>
+                    <label class='result-label'>Jenis Kasus</label>
+                    <p>$jenisKasus</p>
+                    <label class='result-label'>Nama Korban</label>
+                    <p>$namaKorban</p>
+                    <label class='result-label'>NIM Korban</label>
+                    <p>$nimKorban</p>
+                    <label class='result-label'>Dampak Kasus</label>
+                    <p>$dampakKasus</p>
+                    <label class='result-label'>Jurusan Korban</label>
+                    <p>$jurusanKorban</p>
+                    <label class='result-label'>Nama Pelaku</label>
+                    <p>$namaPelaku</p>
+                    <label class='result-label'>Bukti Kejadian</label>
+                    <p>$buktiKejadian</p>
+                    <label class='result-label'>Waktu Kejadian</label>
+                    <p>$convertedWaktuKejadian</p>
+                    <label class='result-label'>Frekuensi Kejadian</label>
+                    <p>$frekuenseiKejadian</p>
+                    <label class='result-label'>Lokasi Kejadian</label>
+                    <p>$lokasiKejadian</p>
+                    <label class='result-label'>Deskripsi Kejadian</label>
+                    <p>$convertedDeskripsi</p>
+                </div>
+            ";
+        } else if ($namaPelapor !== "") {
+            $result = "
+                <div>
+                    <span class='top-form'>
+                        <div style='display: flex;flex-direction: column'>
+                            <h5 class='title' style='text-align:center'>LAPORAN PERUNDUNGAN</h5>
+                            <p class='subtitle'>Status: <strong>$progressReport</strong></p> 
+                        </div>
+                        <p class='nomor-pengajuan'>#$nomorPengajuan</p>
+                    </span>
+                    <label class='result-label'>Jenis Kasus</label>
+                    <p>$jenisKasus</p>
+                    <label class='result-label'>Nama Pelapor</label>
+                    <p>$namaPelapor</p>
+                    <label class='result-label'>NIM Pelapor</label>
+                    <p>$nimPelapor</p>
+                    <label class='result-label'>Nama Korban</label>
+                    <p>$namaKorban</p>
+                    <label class='result-label'>NIM Korban</label>
+                    <p>$nimKorban</p>
+                    <label class='result-label'>Dampak Kasus</label>
+                    <p>$dampakKasus</p>
+                    <label class='result-label'>Jurusan Korban</label>
+                    <p>$jurusanKorban</p>
+                    <label class='result-label'>Nama Pelaku</label>
+                    <p>$namaPelaku</p>
+                    <label class='result-label'>Bukti Kejadian</label>
+                    <p>$buktiKejadian</p>
+                    <label class='result-label'>Waktu Kejadian</label>
+                    <p>$convertedWaktuKejadian</p>
+                    <label class='result-label'>Frekuensi Kejadian</label>
+                    <p>$frekuenseiKejadian</p>
+                    <label class='result-label'>Lokasi Kejadian</label>
+                    <p>$lokasiKejadian</p>
+                    <label class='result-label'>Deskripsi Kejadian</label>
+                    <p>$convertedDeskripsi</p>
+                </div>
+            ";
+        }
     }
     
 }

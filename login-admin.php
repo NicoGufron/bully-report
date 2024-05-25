@@ -25,7 +25,7 @@ if (isset($_SESSION["username"]) && isset($_SESSION['id'])) {
                 <i class='fa-solid fa-check' style='padding-right: 10px;padding-top: 5px'></i>
                 Login berhasil!
             </div>";
-            header("Refresh: 3, url= dashboard-admin.php");
+            header("Refresh: 3, url= dashboard.php");
         } else {
             $result = "<div class='alert alert-danger' role='alert'>
                 <i class='fa-solid fa-xmark' style='padding-right: 10px;padding-top: 5px'></i>

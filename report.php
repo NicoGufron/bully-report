@@ -20,7 +20,7 @@
 require_once("connect.php");
 include("navbar.php");
 
-$sql = "INSERT INTO reports (jenis_kasus, nama_saksi, status_pelapor, dampak_kasus, nama_korban, email, nomor_hp, nim_korban, jurusan_korban, nama_pelaku, waktu_kejadian, frekuensi_kejadian, lokasi_kejadian, deskripsi_kejadian, nomor_pengajuan) VALUES";
+$sql = "INSERT INTO reports (jenis_kasus, nama_pelapor, nim_pelapor, status_pelapor, dampak_kasus, nama_korban, email, nomor_hp, nim_korban, jurusan_korban, nama_pelaku, waktu_kejadian, frekuensi_kejadian, lokasi_kejadian, deskripsi_kejadian, bukti_kejadian, nomor_pengajuan, progress) VALUES";
 
 function generateNomorPengajuan(): string {
     $characters = "01234456789";
@@ -63,12 +63,47 @@ if (isset($_POST["submit-korban"])) {
     $nomorPengajuan = '';
     $nomorPengajuan = generateNomorPengajuan();
 
-    $values = $sql . "('$postJenisKasus', '', '$postStatusPelapor', '$dampakList', '$postNamaKorban', '$postEmailPelapor', '$postNomorHP', '$postNimKorban', '$postJurusanKorban', '$postNamaPelaku', '$postWaktuKejadian', '$postFrekuensiKejadian', '$postLokasiKejadian', '$postDeskripsiKejadian', '$postBuktiKejadian', '$nomorPengajuan')";
-
+    $values = $sql . "('$postJenisKasus', '', '', '$postStatusPelapor', '$dampakList', '$postNamaKorban', '$postEmailPelapor', '$postNomorHP', '$postNimKorban', '$postJurusanKorban', '$postNamaPelaku', '$postWaktuKejadian', '$postFrekuensiKejadian', '$postLokasiKejadian', '$postDeskripsiKejadian', '$postBuktiKejadian', '$nomorPengajuan', '1')";
     $q = mysqli_query($conn, $values);
 
 } else if (isset($_POST["submit-saksi"])) {
-    
+    $postJenisKasus = $_POST["jenis-kasus"];
+    $postStatusPelapor = $_POST['status-pelapor'];
+    var_dump($postStatusPelapor);
+    $postNamaPelapor = $_POST['nama-pelapor'];
+    $postNimPelapor = $_POST['nim-pelapor'];
+    $postNamaKorban = $_POST['nama-korban'];
+    $postNimKorban = $_POST['nim-korban'];
+    $postDampakKasus = $_POST['dampak-kasus'];
+
+    if (isset($postDampakKasus) && is_array($postDampakKasus)) {
+        // jika hanya ada 1 checkbox
+        if (count($postDampakKasus) === 1) {
+            $dampakList = $postDampakKasus[0];
+        } else {
+            $dampakList = implode(', ', $postDampakKasus);
+        }
+
+        // var_dump("Dampak: $dampakList");
+    }
+
+    $postJurusanKorban = $_POST['jurusan-korban'];
+    $postNamaPelaku = $_POST['nama-pelaku'];
+    $postWaktuKejadian = $_POST['waktu-kejadian'];
+    $postFrekuensiKejadian = $_POST['frekuensi-kejadian'];
+    $postLokasiKejadian = $_POST['lokasi-kejadian'];
+    $postDeskripsiKejadian = $_POST['deskripsi-kejadian'];
+    $postNomorHP = $_POST['nomor-hp'];
+    $postEmailPelapor = $_POST['email-pelapor'];
+    $postBuktiKejadian = $_POST['bukti-kejadian'];
+
+    $nomorPengajuan = '';
+    $nomorPengajuan = generateNomorPengajuan();
+
+    $values = $sql . " ('$postJenisKasus', '$postNamaPelapor', '$postNimPelapor', '$postStatusPelapor', '$dampakList', '$postNamaKorban', '$postEmailPelapor', '$postNomorHP', '$postNimKorban', '$postJurusanKorban', '$postNamaPelaku', '$postWaktuKejadian', '$postFrekuensiKejadian', '$postLokasiKejadian', '$postDeskripsiKejadian', '$postBuktiKejadian', '$nomorPengajuan', '1')";
+    $q = mysqli_query($conn, $values);
+
+
 }
 ?>
 
@@ -88,13 +123,14 @@ if (isset($_POST["submit-korban"])) {
                     </div>
 
                     <label>Status pelapor (<span style="color:red">*</span>)</label>
-                    <select id="form-selector" class="form-control" name="status-pelapor">
+                    <select id="form-selector" class="form-control">
                         <option value="" selected readonly hidden>Silahkan dipilih</option>
                         <option value="korban">Korban</option>
                         <option value="saksi">Saksi</option>
                     </select>
                     <!-- Formulir Korban -->
                     <form method="post" id="korban-form">
+                        <input type='hidden' name='status-pelapor' class='status-pelapor'>
                         <label>Jenis Perundungan (<span style="color:red">*</span>)</label>
                         <select class="form-control" name="jenis-kasus">
                             <option value="" selected readonly hidden>Silahkan dipilih</option>
@@ -158,18 +194,33 @@ if (isset($_POST["submit-korban"])) {
 
                     <!-- Formulir Saksi -->
                     <form method="post" id="saksi-form" style="display: none">
+                        <input type='hidden' name='status-pelapor' class='status-pelapor'>
                         <!-- <label>Status pelapor (<span style="color:red">*</span>)</label>
                         <select id="form-selector" class="form-control">
                             <option value="" selected readonly hidden>Silahkan dipilih</option>
                             <option value="korban">Korban</option>
                             <option value="saksi">Saksi</option>
                         </select> -->
+                        <label>Jenis Perundungan (<span style="color:red">*</span>)</label>
+                        <select class="form-control" name="jenis-kasus">
+                            <option value="" selected readonly hidden>Silahkan dipilih</option>
+                            <option value="Perundungan">Perundungan</option>
+                            <option value="Kekerasan Seksual">Kekerasan Seksual</option>
+                            <option value="Intoleransi">Intoleransi</option>
+                        </select>
                         <label>Nama pelapor (Opsional)</label>
-                        <input class="form-control" type="text" name="nama-korban">
-                        <label>NIK pelapor (Opsional)</label>
-                        <input class="form-control" type="text" name="nim-korban" required>
+                        <input class="form-control" type="text" name="nama-pelapor">
+                        <label>NIM pelapor (Opsional)</label>
+                        <input class="form-control" type="text" name="nim-pelapor" required>
+                        <label>Dampak Perundungan (<span style="color:red">*</span>)</label>
+                        <div class="checkboxes">
+                            <input type="checkbox" name="dampak-kasus[]" value="Physical"><label for="">Physical</label>
+                        </div>
+                        <div class="checkboxes">
+                            <input type="checkbox" name="dampak-kasus[]" value="Mental"><label>Mental</label>
+                        </div>
                         <label>Nama Korban (<span style="color:red">*</span>)</label>
-                        <input class="form-control" type="text" name="nim-korban" required>
+                        <input class="form-control" type="text" name="nama-korban" required>
                         <label>NIM Korban (<span style="color:red">*</span>)</label>
                         <input class="form-control" type="text" name="nim-korban" required>
                         <label>Pilih jurusan yang sedang ditempuh korban (<span style="color:red">*</span>)</label>
@@ -186,19 +237,19 @@ if (isset($_POST["submit-korban"])) {
                         <label>Nama Pelaku (<span style="color:red">*</span>)</label>
                         <input class="form-control" type="text" name="nama-pelaku">
                         <label>Waktu Kejadian (<span style="color:red">*</span>)</label>
-                        <input class="form-control" type="date" name="nama-korban">
+                        <input class="form-control" type="date" name="waktu-kejadian">
                         <p class="hint">* Masukkan tanggal terakhir kejadian</p>
                         <label>Frekuensi Kejadian (<span style="color:red">*</span>)</label>
-                        <select class="form-control">
-                            <option>Jarang (1 atau 2 kali dalam setahun)</option>
-                            <option>Kadang-Kadang (1 atau 2 kali dalam sebulan)</option>
-                            <option>Sering (1 atau 2 kali dalam seminggu)</option>
-                            <option>Setiap Hari</option>
+                        <select class="form-control" name='frekuensi-kejadian'>
+                            <option value="Jarang">Jarang (1 atau 2 kali dalam setahun)</option>
+                            <option value="Kadang-kadang">Kadang-Kadang (1 atau 2 kali dalam sebulan)</option>
+                            <option value="Sering">Sering (1 atau 2 kali dalam seminggu)</option>
+                            <option value="Setiap Hari">Setiap Hari</option>
                         </select>
                         <label>Lokasi Kejadian (<span style="color:red">*</span>)</label>
                         <input class="form-control" type="text" name="lokasi-kejadian">
                         <label>Deskripsi Kejadian (<span style="color:red">*</span>)</label>
-                        <textarea class="form-control" col="5" rows="5" placeholder="Tuliskan deskripsi kejadian secara detil. "></textarea>
+                        <textarea class="form-control" name='deskripsi-kejadian' col="5" rows="5" placeholder="Tuliskan deskripsi kejadian secara detil. "></textarea>
                         <label>Bukti Kejadian (Opsional)</label>
                         <input class="form-control" type="text" name="bukti-kejadian">
                         <div class='notice' style='display: flex;flex-direction: row; justify-content: space-between; align-items: baseline'>
@@ -223,7 +274,7 @@ if (isset($_POST["submit-korban"])) {
             $("#saksi-form").hide();
             $('#form-selector').change(function() {
                 var selectedValue = $(this).val();
-                console.log(selectedValue);
+                $('.status-pelapor').val(selectedValue);
                 if (selectedValue === "korban") {
                     $("#korban-form").show();
                     $("#saksi-form").hide();

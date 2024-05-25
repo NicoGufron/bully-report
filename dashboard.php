@@ -19,10 +19,13 @@
 <?php
 require_once("connect.php");
 session_start();
+if (!isset($_SESSION['username']) && !isset($_SESSION['id'])) {
+    header('Location: index.php');
+}
 
 $totalReports = 0;
 
-$sql = "SELECT * FROM reports WHERE progress = '1' ORDER BY form_id ASC";
+$sql = "SELECT * FROM reports WHERE progress = '1' ORDER BY form_id DESC";
 
 $q = mysqli_query($conn, $sql);
 
@@ -40,23 +43,12 @@ $totalReports = mysqli_num_rows($q);
     </div>
     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasLeft" aria-labelledby="offcanvasExampleLabel">
         <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Menu</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
-            <div>
-                Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
-            </div>
-            <div class="dropdown mt-3">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
-                    Dropdown button
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-            </div>
+            <a class="offcanvas-nav-link nav-link">Laporan On Progress</a>
+            <a class="offcanvas-nav-link nav-link">Laporan Selesai</a>
         </div>
     </div>
     <div class="container-fluid">
@@ -85,6 +77,13 @@ $totalReports = mysqli_num_rows($q);
                             $frekuenseiKejadian = $row['frekuensi_kejadian'];
                             $lokasiKejadian = $row['lokasi_kejadian'];
                             $deskripsiKejadian = $row['deskripsi_kejadian'];
+                            $buktiKejadian = $row['bukti_kejadian'];
+
+                            if ($buktiKejadian == "") {
+                                $buktiKejadian = "Tidak ada bukti kejadian";
+                            } else if (strpos($buktiKejadian, "https://") !== false){
+                                $buktiKejadian = "<a target='_blank' href='$buktiKejadian'>$buktiKejadian</a>";
+                            }
 
                             $convertedWaktuKejadian = date('d M Y', strtotime($waktuKejadian));
 
@@ -114,6 +113,8 @@ $totalReports = mysqli_num_rows($q);
                                         <p>$jurusanKorban</p>
                                         <label class='result-label'>Nama Pelaku</label>
                                         <p>$namaPelaku</p>
+                                        <label class='result-label'>Bukti Kejadian</label>
+                                        <p>$buktiKejadian</p>
                                         <label class='result-label'>Waktu Kejadian</label>
                                         <p>$convertedWaktuKejadian</p>
                                         <label class='result-label'>Frekuensi Kejadian</label>
@@ -122,6 +123,20 @@ $totalReports = mysqli_num_rows($q);
                                         <p>$lokasiKejadian</p>
                                         <label class='result-label'>Deskripsi Kejadian</label>
                                         <p>$convertedDeskripsi</p>
+                                        <div style='border:1px solid black;height: 1px; margin-top: 2.5%'></div>
+                                        <form method='post' action='submit.php'>
+                                            <input type='hidden' name='nomor-pengajuan' value='$nomorPengajuan'>
+                                            <div class='sidenote'>
+                                                <label class='result-label'>Status Kasus: </label>
+                                                <select class='form-control custom-select' name='progress-report'>
+                                                    <option value='1'>On Progress</option>
+                                                    <option value='2'>Selesai</option>
+                                                </select>
+                                                <label class='result-label' style='margin-bottom: 10px;'>Catatan untuk laporan ini:</label>
+                                                <textarea class='form-control' col='4' rows='4' name='sidenote'></textarea>
+                                                <input name='submit-sidenote' type='submit' class='submit-button''>
+                                            </div>
+                                        </form>
                                         </div>
                                     </div>
                                 </div>
