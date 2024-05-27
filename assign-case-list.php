@@ -16,75 +16,27 @@
     <link rel="stylesheet" href="style/style.css" />
 </head>
 
-<?php
-include("menu.php");
-require_once("connect.php");
-if (!isset($_SESSION['username']) && !isset($_SESSION['id'])) {
-    header('Location: index.php');
-}
-
-$id = $_SESSION['id'];
-$usernameSession = $_SESSION['username'];
-$totalReports = 0;
-
-$sqlPerundungan = "SELECT * FROM reports WHERE progress = '1' AND jenis_kasus = 'Perundungan' ORDER BY form_id DESC";
-$sqlKekerasanSeksual = "SELECT * FROM reports WHERE progress = '1' AND jenis_kasus = 'Kekerasan Seksual' ORDER BY form_id DESC";
-$sqlIntoleransi = "SELECT * FROM reports WHERE progress = '1' AND jenis_kasus = 'Intoleransi' ORDER BY form_id DESC";
-$sqlAssigned = "SELECT * FROM reports WHERE assign_to = '$id'";
-
-$qp = mysqli_query($conn, $sqlPerundungan);
-$qks = mysqli_query($conn, $sqlKekerasanSeksual);
-$qi = mysqli_query($conn, $sqlIntoleransi);
-$qa = mysqli_query($conn, $sqlAssigned);
-
-$totalReportsPerundungan = mysqli_num_rows($qp);
-$totalReportsKekerasanSeksual = mysqli_num_rows($qks);
-$totalReportsIntoleransi = mysqli_num_rows($qi);
-$totalAssigned = mysqli_num_rows($qa);
-
-?>
-
 <body>
     <?php
-    ?>
-    <div class="container-fluid">
-        <section class="dashboard-section">
-            <div class="container">
-                <h2>Dashboard</h2>
-                <div class="total-reports">
-                    <div class="report-cards">
-                        <span class='top-cards'>
-                            <h2><?= $totalReportsPerundungan ?></h2><i class="fa-solid fa-square-person-confined fa-2xl"></i>
-                        </span>
-                        <p>Laporan perundungan</p>
+    require_once("connect.php");
+    include("menu.php");
 
-                    </div>
-                    <div class="report-cards">
-                        <span class='top-cards'>
-                            <h2><?= $totalReportsKekerasanSeksual ?></h2><i class="fa-solid fa-heart-circle-exclamation fa-2xl"></i>
-                        </span>
-                        <p class='subtitle'>Laporan kekerasan seksual</p>
-                    </div>
-                    <div class="report-cards">
-                        <span class='top-cards'>
-                            <h2><?= $totalReportsIntoleransi ?></h2><i class="fa-solid fa-hand-fist fa-2xl"></i>
-                        </span>
-                        <p>Laporan intoleransi</p>
-                    </div>
-                    <div class="report-cards">
-                        <span class='top-cards'>
-                            <h2><?= $totalAssigned ?></h2><i class="fa-solid fa-magnifying-glass fa-2xl"></i>
-                        </span>
-                        <p>Kasus yang ditugaskan</p>
-                    </div>
-                </div>
+    $id = $_SESSION['id'];
+    $usernameSession = $_SESSION['username'];
+
+
+    ?>
+
+    <div class="container-fluid">
+        <section class="">
+            <div class="container">
                 <div class="reports">
-                    <h4 class="title">Laporan Perundungan On Progress</h4>
+                    <h4 class="title">Laporan Perundungan Yang Ditugaskan</h4>
                     <p class="subtitle">Diurut berdasarkan paling baru</p>
                     <div class="accordion">
                         <?php
                         $counter = 1;
-                        $sql = "SELECT * FROM reports WHERE progress = '1' AND assign_to = '1' ORDER BY form_id DESC";
+                        $sql = "SELECT * FROM reports WHERE progress = '1' and assign_to = '$id' ORDER BY form_id DESC";
                         $q = mysqli_query($conn, $sql);
                         while ($row = mysqli_fetch_assoc($q)) {
                             $namaPelapor = $row['nama_pelapor'];
@@ -112,11 +64,9 @@ $totalAssigned = mysqli_num_rows($qa);
                             $convertedWaktuKejadian = date('d M Y', strtotime($waktuKejadian));
 
                             $assignmentSql = "SELECT * FROM accounts";
-
                             $assignmentTop = "<label class='result-label'>Tugaskan kasus ini ke: </label>
-                            <select class='form-control custom-select' id='assign-to-$nomorPengajuan' name='assign-to'>";
+                            <select class='form-control custom-select' name='assign-to'>";
                             $assignmentMiddle = '';
-
                             $result = mysqli_query($conn, $assignmentSql);
 
                             while ($accounts = mysqli_fetch_assoc($result)) {
@@ -131,6 +81,32 @@ $totalAssigned = mysqli_num_rows($qa);
                             $assignment = $assignmentTop . $assignmentMiddle . $assignmentEnd;
 
                             $convertedDeskripsi = nl2br($deskripsiKejadian);
+                            $sqlNotes = "SELECT * FROM notes WHERE nomor_pengajuan = $nomorPengajuan";
+                            $qNotes = mysqli_query($conn, $sqlNotes);
+                            $allComment = "";
+
+                            if (mysqli_num_rows($qNotes) > 0) {
+                                $commentTop = "
+                                <div style='border:1px solid black;height: 1px; margin-top: 2.5%'></div>
+                                <div class='comments'>
+                                <label>Catatan tambahan: </label>";
+
+                                $sidenote = "";
+
+                                while ($comments = mysqli_fetch_assoc($qNotes)) {
+                                    $comment = htmlspecialchars($comments['comment']);
+                                    $waktu_komen = htmlspecialchars($comments['waktu_komen']);
+                                    $commenter = htmlspecialchars($comments['commenter']);
+                                    $sidenote .= "
+                                        <label>$commenter<br>$waktu_komen</label>
+                                        <textarea readonly rows='3' cols='3'>$comment</textarea>";
+                                }
+
+                                $commentBottom = "</div>";
+
+                                $allComment = $commentTop . $sidenote . $commentBottom;
+                            }
+
                             echo $accordionItem = "
                                 <div class='accordion-item'>
                                     <h2 class='accordion-header' id='heading$counter'>
@@ -168,22 +144,21 @@ $totalAssigned = mysqli_num_rows($qa);
                                         <p>$convertedDeskripsi</p>
                                         <div style='border:1px solid black;height: 1px; margin-top: 2.5%'></div>
                                         <form method='post' action='submit.php'>
-                                            <input type='hidden' class='nomor-pengajuan-$nomorPengajuan' name='nomor-pengajuan' value='$nomorPengajuan'>
+                                            <input type='hidden' name='nomor-pengajuan' value='$nomorPengajuan'>
                                             <div class='sidenote'>
                                                 $assignment
                                                 <input type='hidden' name='commenter' value='$usernameSession'>
-                                                <input type='hidden' name='where' value='2'>
                                                 <label class='result-label'>Status Kasus: </label>
                                                 <select class='form-control custom-select' name='progress-report'>
                                                     <option value='1'>On Progress</option>
                                                     <option value='2'>Selesai</option>
-                                                    <option value='3'>Dibatalkan</option>
                                                 </select>
                                                 <label class='result-label' style='margin-bottom: 10px;'>Catatan untuk laporan ini:</label>
                                                 <textarea class='form-control' col='4' rows='4' name='comment'></textarea>
                                                 <input name='submit-sidenote' type='submit' class='submit-button''>
                                             </div>
                                         </form>
+                                        $allComment
                                         </div>
                                     </div>
                                 </div>
@@ -197,30 +172,6 @@ $totalAssigned = mysqli_num_rows($qa);
             </div>
         </section>
     </div>
-
-    <!-- <script>
-        $(document).ready(function() {
-            $(".custom-select").change(function() {
-                var selectedValue = $(this).val();
-                var nomorPengajuan = $(".nomor-pengajuan").val();
-                $.ajax({
-                    url: 'assign.php',
-                    type: 'POST',
-                    data: {
-                        'nomor-pengajuan' : nomorPengajuan,
-                        'assign-to': selectedValue
-                    },
-                    success: function(response) {
-                        console.log("success:" , response)
-                    },
-                    failed: function(xhr, status, error) {
-                        console.log("failed: ", error);
-                    }
-                })
-            });
-        })
-    </script> -->
-
 </body>
 
 </html>

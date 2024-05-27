@@ -22,7 +22,8 @@ include("navbar.php");
 
 $sql = "INSERT INTO reports (jenis_kasus, nama_pelapor, nim_pelapor, status_pelapor, dampak_kasus, nama_korban, email, nomor_hp, nim_korban, jurusan_korban, nama_pelaku, waktu_kejadian, frekuensi_kejadian, lokasi_kejadian, deskripsi_kejadian, bukti_kejadian, nomor_pengajuan, progress) VALUES";
 
-function generateNomorPengajuan(): string {
+function generateNomorPengajuan(): string
+{
     $characters = "01234456789";
     $randomString = '';
     $maxNumber = strlen($characters) - 1;
@@ -59,13 +60,12 @@ if (isset($_POST["submit-korban"])) {
     $postNomorHP = $_POST['nomor-hp'];
     $postBuktiKejadian = $_POST['bukti-kejadian'];
     $postEmailPelapor = $_POST['email-pelapor'];
-    
+
     $nomorPengajuan = '';
     $nomorPengajuan = generateNomorPengajuan();
 
     $values = $sql . "('$postJenisKasus', '', '', '$postStatusPelapor', '$dampakList', '$postNamaKorban', '$postEmailPelapor', '$postNomorHP', '$postNimKorban', '$postJurusanKorban', '$postNamaPelaku', '$postWaktuKejadian', '$postFrekuensiKejadian', '$postLokasiKejadian', '$postDeskripsiKejadian', '$postBuktiKejadian', '$nomorPengajuan', '1')";
     $q = mysqli_query($conn, $values);
-
 } else if (isset($_POST["submit-saksi"])) {
     $postJenisKasus = $_POST["jenis-kasus"];
     $postStatusPelapor = $_POST['status-pelapor'];
@@ -102,8 +102,6 @@ if (isset($_POST["submit-korban"])) {
 
     $values = $sql . " ('$postJenisKasus', '$postNamaPelapor', '$postNimPelapor', '$postStatusPelapor', '$dampakList', '$postNamaKorban', '$postEmailPelapor', '$postNomorHP', '$postNimKorban', '$postJurusanKorban', '$postNamaPelaku', '$postWaktuKejadian', '$postFrekuensiKejadian', '$postLokasiKejadian', '$postDeskripsiKejadian', '$postBuktiKejadian', '$nomorPengajuan', '1')";
     $q = mysqli_query($conn, $values);
-
-
 }
 ?>
 
@@ -179,8 +177,9 @@ if (isset($_POST["submit-korban"])) {
                         <textarea class="form-control" name="deskripsi-kejadian" col="5" rows="5" placeholder="Tuliskan deskripsi kejadian secara detil. "></textarea>
                         <label>Bukti Kejadian (Opsional)</label>
                         <input class="form-control" type="text" name="bukti-kejadian">
-                        <div class='notice' style='display: flex;flex-direction: row; justify-content: space-between; align-items: baseline'>
-                            <i class="fa-solid fa-circle-info" style="padding-left: 10px;padding-right: 10px"></i><p><strong>Mohon untuk memastikan link yang diberikan dapat diakses oleh siapapun. Universitas Kalbis menjaga kerahasiaan data anda</strong></p>
+                        <div class='notice' style='display: flex;flex-direction: row; justify-content: space-evenly; align-items: baseline; padding: 2.5%;'>
+                            <i class="fa-solid fa-circle-info" style="padding-left: 10px;padding-right: 10px"></i>
+                            <p><strong>Mohon untuk memastikan link yang diberikan dapat diakses oleh siapapun. Universitas Kalbis menjaga kerahasiaan data anda</strong></p>
                         </div>
                         <label>Nomor yang dapat dihubungi (<span style="color:red">*</span>)</label>
                         <input class="form-control" type="text" name="nomor-hp">
@@ -188,6 +187,10 @@ if (isset($_POST["submit-korban"])) {
                         <input class="form-control" type="text" name="email-pelapor">
 
                         <div style="display: flex; flex-direction:column;margin-top: 50px">
+                            <div class='notice' style='display: flex;flex-direction: row; align-items: baseline; background-color: #ff9595; color:black; padding: 2.5%'>
+                                <i class="fa-solid fa-circle-info" style="padding-left: 10px;padding-right: 10px"></i>
+                                <p><strong>Mohon untuk mengecek kembali laporan anda! Laporan yang sudah diajukan tidak bisa diubah!</strong></p>
+                            </div>
                             <input type="submit" class="submit-button" name='submit-korban' value='Laporkan'>
                         </div>
                     </form>
@@ -252,14 +255,19 @@ if (isset($_POST["submit-korban"])) {
                         <textarea class="form-control" name='deskripsi-kejadian' col="5" rows="5" placeholder="Tuliskan deskripsi kejadian secara detil. "></textarea>
                         <label>Bukti Kejadian (Opsional)</label>
                         <input class="form-control" type="text" name="bukti-kejadian">
-                        <div class='notice' style='display: flex;flex-direction: row; justify-content: space-between; align-items: baseline'>
-                            <i class="fa-solid fa-circle-info" style="padding-left: 10px;padding-right: 10px"></i><p><strong>Mohon untuk memastikan link yang diberikan dapat diakses oleh siapapun. Universitas Kalbis menjaga kerahasiaan data anda</strong></p>
+                         <div class='notice' style='display: flex;flex-direction: row; justify-content: space-evenly; align-items: baseline; padding: 2.5%;'>
+                            <i class="fa-solid fa-circle-info" style="padding-left: 10px;padding-right: 10px"></i>
+                            <p><strong>Mohon untuk memastikan link yang diberikan dapat diakses oleh siapapun. Universitas Kalbis menjaga kerahasiaan data anda</strong></p>
                         </div>
                         <label>Nomor yang dapat dihubungi (<span style="color:red">*</span>)</label>
                         <input class="form-control" type="text" name="nomor-hp">
                         <label>Email yang dapat dihubungi (<span style="color:red">*</span>)</label>
                         <input class="form-control" type="text" name="email-pelapor">
                         <div style="display: flex; flex-direction:column;margin-top: 50px">
+                           <div class='notice' style='display: flex;flex-direction: row; align-items: baseline; background-color: #ff9595; color:black; padding: 2.5%'>
+                                <i class="fa-solid fa-circle-info" style="padding-left: 10px;padding-right: 10px"></i>
+                                <p><strong>Mohon untuk mengecek kembali laporan anda! Laporan yang sudah diajukan tidak bisa diubah!</strong></p>
+                            </div>
                             <input type="submit" class="submit-button" name='submit-saksi' value='Laporkan'></button>
                         </div>
                     </form>
