@@ -25,11 +25,17 @@ if (!isset($_SESSION['username']) && !isset($_SESSION['id'])) {
 
 $totalReports = 0;
 
-$sql = "SELECT * FROM reports WHERE progress = '1' ORDER BY form_id DESC";
+$sqlPerundungan = "SELECT * FROM reports WHERE progress = '1' AND jenis_kasus = 'Perundungan' ORDER BY form_id DESC";
+$sqlKekerasanSeksual = "SELECT * FROM reports WHERE progress = '1' AND jenis_kasus = 'Kekerasan Seksual' ORDER BY form_id DESC";
+$sqlIntoleransi = "SELECT * FROM reports WHERE progress = '1' AND jenis_kasus = 'Intoleransi' ORDER BY form_id DESC";
 
-$q = mysqli_query($conn, $sql);
+$qp = mysqli_query($conn, $sqlPerundungan);
+$qks = mysqli_query($conn, $sqlKekerasanSeksual);
+$qi = mysqli_query($conn, $sqlIntoleransi);
 
-$totalReports = mysqli_num_rows($q);
+$totalReportsPerundungan = mysqli_num_rows($qp);
+$totalReportsKekerasanSeksual = mysqli_num_rows($qks);
+$totalReportsIntoleransi= mysqli_num_rows($qi);
 
 ?>
 
@@ -43,20 +49,35 @@ $totalReports = mysqli_num_rows($q);
     </div>
     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasLeft" aria-labelledby="offcanvasExampleLabel">
         <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Menu</h5>
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Dashboard Admin</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
-            <a class="offcanvas-nav-link nav-link">Laporan On Progress</a>
-            <a class="offcanvas-nav-link nav-link">Laporan Selesai</a>
+            <h5 style="color: gray;margin-top:35px;margin-bottom: 15px">MENU</h5>
+            <a class="offcanvas-nav-link nav-link" href="#"><i class="fa-solid fa-box fa-lg"></i>Dashboard</a>
+            <a class="offcanvas-nav-link nav-link" href="#"><i class="fa-solid fa-file fa-lg"></i>Laporan On Progress</a>
+            <a class="offcanvas-nav-link nav-link" href="#"><i class="fa-solid fa-clipboard-check fa-lg"></i>Laporan Selesai</a>
         </div>
     </div>
     <div class="container-fluid">
         <section class="dashboard-section">
             <div class="container">
+                <h2>Dashboard</h2>
                 <div class="total-reports">
-                    <i class="fa-solid fa-circle-info" style="padding-left: 10px;padding-right: 10px"></i>
-                    <p>Kamu memiliki <?= $totalReports ?> laporan</p>
+                    <div class="report-cards">
+                    <span class='top-cards'><h2><?= $totalReportsPerundungan ?></h2><i class="fa-solid fa-square-person-confined fa-2xl"></i></span>
+                        <p>Laporan perundungan</p>
+                        
+                    </div>
+                    <div class="report-cards">
+                        <span class='top-cards'><h2><?= $totalReportsKekerasanSeksual ?></h2><i class="fa-solid fa-heart-circle-exclamation fa-2xl"></i></span>
+                        <p class='subtitle'>Laporan kekerasan seksual</p>
+                    </div>
+                    <div class="report-cards">
+                    <span class='top-cards'><h2><?= $totalReportsIntoleransi ?></h2><i class="fa-solid fa-hand-fist fa-2xl"></i></span>
+                        <p>Laporan intoleransi</p>
+
+                    </div>
                 </div>
                 <div class="reports">
                     <h4 class="title">Laporan Perundungan On Progress</h4>
@@ -64,7 +85,11 @@ $totalReports = mysqli_num_rows($q);
                     <div class="accordion">
                         <?php
                         $counter = 1;
+                        $sql = "SELECT * FROM reports WHERE progress = '1' ORDER BY form_id DESC";
+                        $q = mysqli_query($conn, $sql);
                         while ($row = mysqli_fetch_assoc($q)) {
+                            $namaPelapor = $row['nama_pelapor'];
+                            $nimPelapor = $row['nim_pelapor'];
                             $namaKorban = $row['nama_korban'];
                             $jenisKasus = $row['jenis_kasus'];
                             $nomorPengajuan = $row['nomor_pengajuan'];
@@ -86,6 +111,24 @@ $totalReports = mysqli_num_rows($q);
                             }
 
                             $convertedWaktuKejadian = date('d M Y', strtotime($waktuKejadian));
+
+                            $assignmentSql = "SELECT * FROM accounts";
+
+                            $assignmentTop = "<label class='result-label'>Tugaskan kasus ini ke: </label>
+                            <select class='form-control custom-select' name='assign-to'>";
+                            $assignmentMiddle = '';
+
+                            $result = mysqli_query($conn, $assignmentSql);
+
+                            while($accounts = mysqli_fetch_assoc($result)) {
+                                $username = $accounts['username'];
+
+                                $assignmentMiddle .= "<option value='$username'>$username</option>";
+                            }
+
+                            $assignmentEnd = "</select>";
+
+                            $assignment = $assignmentTop . $assignmentMiddle . $assignmentEnd;
 
                             $convertedDeskripsi = nl2br($deskripsiKejadian);
                             echo $accordionItem = "
@@ -127,6 +170,7 @@ $totalReports = mysqli_num_rows($q);
                                         <form method='post' action='submit.php'>
                                             <input type='hidden' name='nomor-pengajuan' value='$nomorPengajuan'>
                                             <div class='sidenote'>
+                                                $assignment
                                                 <label class='result-label'>Status Kasus: </label>
                                                 <select class='form-control custom-select' name='progress-report'>
                                                     <option value='1'>On Progress</option>
