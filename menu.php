@@ -7,7 +7,7 @@ session_start();
         <button class="offcanvas-menu" data-bs-toggle="offcanvas" data-bs-target="#offcanvasLeft" aria-controls="offcanvasLeft" style="background-color: transparent; color: #384C67; border: 0px"><i class="fa-solid fa-bars fa-xl"></i></button>
         <h4>Selamat datang, <?= $_SESSION['username'] ?></h4>
     </div>
-    <button class='logout-button'><i class="fa-solid fa-right-from-bracket"></i>Keluar</button>
+    <span><a href='logout.php' class='logout-button'><i class="fa-solid fa-right-from-bracket"></i>Keluar</a></span>
 </div>
 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasLeft" aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-header">
@@ -18,6 +18,6 @@ session_start();
         <h5 style="color: gray;margin-top:35px;margin-bottom: 15px">MENU</h5>
         <a class="offcanvas-nav-link nav-link" href="dashboard.php"><i class="fa-solid fa-box fa-lg"></i>Dashboard</a>
         <a class="offcanvas-nav-link nav-link" href="assign-case-list.php"><i class="fa-solid fa-file fa-lg"></i>Kasus Yang di Tugaskan</a>
-        <a class="offcanvas-nav-link nav-link" href="#"><i class="fa-solid fa-clipboard-check fa-lg"></i>Kasus Selesai</a>
+        <a class="offcanvas-nav-link nav-link" href="completed-case-list.php"><i class="fa-solid fa-clipboard-check fa-lg"></i>Kasus Selesai</a>
     </div>
 </div>

@@ -48,7 +48,9 @@ if ($_POST) {
 
         if ($progress === "1") {
             $progressReport = "Sedang Berjalan";
-        } else if ($progress === "2") {
+        } else if ($progres === "2") {
+            $progressReport = "Dibatalkan";
+        } else if ($progress === "3") {
             $progressReport= "Selesai";
         }
 

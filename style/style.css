@@ -35,10 +35,13 @@ h4 {
 .logout-button {
     background-color: #D54444;
     color: white;
+    text-wrap: nowrap;
+    text-decoration: none;
     font-weight: bold;
     border-radius: 10px;
     border: 0px;
-    padding: 10px 2.5%;
+    padding: 15%;
+    margin-right: 20px;
 }
 
 .logout-button i {
@@ -113,6 +116,7 @@ h4 {
     border: 0px;
     background-color: #F6911B;
     color: black;
+    border: 1px solid black;
     padding: 10% 25%;
     font-size: 14px;
     font-weight: bold;
@@ -189,6 +193,10 @@ select {
     border-radius: 10px;
     background-color: #D1E7DD;
     color: #0a3622;
+}
+
+.notice p {
+    font-weight: 600;
 }
 
 .notice ul li {
@@ -273,8 +281,8 @@ select {
     display: none;
 }
 
-.dashboard-section {
-    margin-top: 20px;
+.dashboard-section, .completed-cases, .on-progress-section-cases {
+    margin: 2.5%;
 }
 
 

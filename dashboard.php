@@ -49,89 +49,93 @@ $totalAssigned = mysqli_num_rows($qa);
     ?>
     <div class="container-fluid">
         <section class="dashboard-section">
-            <div class="container">
-                <h2>Dashboard</h2>
-                <div class="total-reports">
-                    <div class="report-cards">
-                        <span class='top-cards'>
-                            <h2><?= $totalReportsPerundungan ?></h2><i class="fa-solid fa-square-person-confined fa-2xl"></i>
-                        </span>
-                        <p>Laporan perundungan</p>
+            <h4 class='title'>Dashboard</h4>
+            <div class="total-reports">
+                <div class="report-cards">
+                    <span class='top-cards'>
+                        <h2><?= $totalReportsPerundungan ?></h2><i class="fa-solid fa-square-person-confined fa-2xl"></i>
+                    </span>
+                    <p>Laporan perundungan</p>
 
-                    </div>
-                    <div class="report-cards">
-                        <span class='top-cards'>
-                            <h2><?= $totalReportsKekerasanSeksual ?></h2><i class="fa-solid fa-heart-circle-exclamation fa-2xl"></i>
-                        </span>
-                        <p class='subtitle'>Laporan kekerasan seksual</p>
-                    </div>
-                    <div class="report-cards">
-                        <span class='top-cards'>
-                            <h2><?= $totalReportsIntoleransi ?></h2><i class="fa-solid fa-hand-fist fa-2xl"></i>
-                        </span>
-                        <p>Laporan intoleransi</p>
-                    </div>
-                    <div class="report-cards">
-                        <span class='top-cards'>
-                            <h2><?= $totalAssigned ?></h2><i class="fa-solid fa-magnifying-glass fa-2xl"></i>
-                        </span>
-                        <p>Kasus yang ditugaskan</p>
-                    </div>
                 </div>
-                <div class="reports">
-                    <h4 class="title">Laporan Perundungan On Progress</h4>
-                    <p class="subtitle">Diurut berdasarkan paling baru</p>
-                    <div class="accordion">
-                        <?php
-                        $counter = 1;
-                        $sql = "SELECT * FROM reports WHERE progress = '1' AND assign_to = '1' ORDER BY form_id DESC";
-                        $q = mysqli_query($conn, $sql);
-                        while ($row = mysqli_fetch_assoc($q)) {
-                            $namaPelapor = $row['nama_pelapor'];
-                            $nimPelapor = $row['nim_pelapor'];
-                            $namaKorban = $row['nama_korban'];
-                            $jenisKasus = $row['jenis_kasus'];
-                            $nomorPengajuan = $row['nomor_pengajuan'];
-                            $statusPelapor = $row['status_pelapor'];
-                            $nimKorban = $row['nim_korban'];
-                            $dampakKasus = $row['dampak_kasus'];
-                            $jurusanKorban = $row['jurusan_korban'];
-                            $namaPelaku = $row['nama_pelaku'];
-                            $waktuKejadian = $row['waktu_kejadian'];
-                            $frekuenseiKejadian = $row['frekuensi_kejadian'];
-                            $lokasiKejadian = $row['lokasi_kejadian'];
-                            $deskripsiKejadian = $row['deskripsi_kejadian'];
-                            $buktiKejadian = $row['bukti_kejadian'];
+                <div class="report-cards">
+                    <span class='top-cards'>
+                        <h2><?= $totalReportsKekerasanSeksual ?></h2><i class="fa-solid fa-heart-circle-exclamation fa-2xl"></i>
+                    </span>
+                    <p class='subtitle'>Laporan kekerasan seksual</p>
+                </div>
+                <div class="report-cards">
+                    <span class='top-cards'>
+                        <h2><?= $totalReportsIntoleransi ?></h2><i class="fa-solid fa-hand-fist fa-2xl"></i>
+                    </span>
+                    <p>Laporan intoleransi</p>
+                </div>
+                <div class="report-cards">
+                    <span class='top-cards'>
+                        <h2><?= $totalAssigned ?></h2><i class="fa-solid fa-magnifying-glass fa-2xl"></i>
+                    </span>
+                    <p>Kasus yang ditugaskan</p>
+                </div>
+            </div>
+            <div class="reports">
+                <h4 class="title">Laporan Perundungan Baru</h4>
+                <p class="subtitle">Diurut berdasarkan paling baru</p>
+                <div class="accordion">
+                    <?php
+                    //progress
+                    // 1 = on progress
+                    // 2 = dibatalkan
+                    // 3 = selesai
+                    // 4 = baru
+                    $counter = 1;
+                    $sql = "SELECT * FROM reports WHERE progress = '4' AND assign_to = '1' ORDER BY form_id DESC";
+                    $q = mysqli_query($conn, $sql);
+                    while ($row = mysqli_fetch_assoc($q)) {
+                        $namaPelapor = $row['nama_pelapor'];
+                        $nimPelapor = $row['nim_pelapor'];
+                        $namaKorban = $row['nama_korban'];
+                        $jenisKasus = $row['jenis_kasus'];
+                        $nomorPengajuan = $row['nomor_pengajuan'];
+                        $statusPelapor = $row['status_pelapor'];
+                        $nimKorban = $row['nim_korban'];
+                        $dampakKasus = $row['dampak_kasus'];
+                        $jurusanKorban = $row['jurusan_korban'];
+                        $namaPelaku = $row['nama_pelaku'];
+                        $waktuKejadian = $row['waktu_kejadian'];
+                        $frekuenseiKejadian = $row['frekuensi_kejadian'];
+                        $lokasiKejadian = $row['lokasi_kejadian'];
+                        $deskripsiKejadian = $row['deskripsi_kejadian'];
+                        $buktiKejadian = $row['bukti_kejadian'];
 
-                            if ($buktiKejadian == "") {
-                                $buktiKejadian = "Tidak ada bukti kejadian";
-                            } else if (strpos($buktiKejadian, "https://") !== false) {
-                                $buktiKejadian = "<a target='_blank' href='$buktiKejadian'>$buktiKejadian</a>";
-                            }
+                        if ($buktiKejadian == "") {
+                            $buktiKejadian = "Tidak ada bukti kejadian";
+                        } else if (strpos($buktiKejadian, "https://") !== false) {
+                            $buktiKejadian = "<a target='_blank' href='$buktiKejadian'>$buktiKejadian</a>";
+                        }
 
-                            $convertedWaktuKejadian = date('d M Y', strtotime($waktuKejadian));
+                        $convertedWaktuKejadian = date('d M Y', strtotime($waktuKejadian));
 
-                            $assignmentSql = "SELECT * FROM accounts";
+                        $assignmentSql = "SELECT * FROM accounts";
 
-                            $assignmentTop = "<label class='result-label'>Tugaskan kasus ini ke: </label>
+                        $assignmentTop = "<label class='result-label'>Tugaskan kasus ini ke: </label>
                             <select class='form-control custom-select' id='assign-to-$nomorPengajuan' name='assign-to'>";
-                            $assignmentMiddle = '';
+                        $assignmentMiddle = '';
 
-                            $result = mysqli_query($conn, $assignmentSql);
+                        $result = mysqli_query($conn, $assignmentSql);
 
-                            while ($accounts = mysqli_fetch_assoc($result)) {
-                                $id = $accounts['id'];
-                                $username = $accounts['username'];
+                        while ($accounts = mysqli_fetch_assoc($result)) {
+                            $id = $accounts['id'];
+                            $username = $accounts['username'];
 
-                                $assignmentMiddle .= "<option value='$id'>$username</option>";
-                            }
+                            $assignmentMiddle .= "<option value='$id'>$username</option>";
+                        }
 
-                            $assignmentEnd = "</select>";
+                        $assignmentEnd = "</select>";
 
-                            $assignment = $assignmentTop . $assignmentMiddle . $assignmentEnd;
+                        $assignment = $assignmentTop . $assignmentMiddle . $assignmentEnd;
 
-                            $convertedDeskripsi = nl2br($deskripsiKejadian);
-                            echo $accordionItem = "
+                        $convertedDeskripsi = nl2br($deskripsiKejadian);
+                        echo $accordionItem = "
                                 <div class='accordion-item'>
                                     <h2 class='accordion-header' id='heading$counter'>
                                         <button class='accordion-button' type='button' data-bs-toggle='collapse' data-bs-target='#collapse$counter' aria-expanded='false' aria-controls='collapse$counter'>
@@ -176,8 +180,8 @@ $totalAssigned = mysqli_num_rows($qa);
                                                 <label class='result-label'>Status Kasus: </label>
                                                 <select class='form-control custom-select' name='progress-report'>
                                                     <option value='1'>On Progress</option>
-                                                    <option value='2'>Selesai</option>
-                                                    <option value='3'>Dibatalkan</option>
+                                                    <option value='2'>Dibatalkan</option>
+                                                    <option value='3'>Selesai</option>
                                                 </select>
                                                 <label class='result-label' style='margin-bottom: 10px;'>Catatan untuk laporan ini:</label>
                                                 <textarea class='form-control' col='4' rows='4' name='comment'></textarea>
@@ -188,11 +192,10 @@ $totalAssigned = mysqli_num_rows($qa);
                                     </div>
                                 </div>
                                 ";
-                            $counter = $counter + 1;
-                        }
-                        ?>
+                        $counter = $counter + 1;
+                    }
+                    ?>
 
-                    </div>
                 </div>
             </div>
         </section>
