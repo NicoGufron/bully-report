@@ -27,47 +27,48 @@ if ($_POST) {
 
     $q = mysqli_query($conn, $sql);
 
-    while ($row = mysqli_fetch_assoc($q)) {
-        $jenisKasus = $row["jenis_kasus"];
-        $namaPelapor = $row['nama_pelapor'];
-        $nimPelapor = $row['nim_pelapor'];
-        $namaKorban = $row['nama_korban'];
-        $statusPelapor = $row['status_pelapor'];
-        $nimKorban = $row['nim_korban'];
-        $dampakKasus = $row['dampak_kasus'];
-        $jurusanKorban = $row['jurusan_korban'];
-        $namaPelaku = $row['nama_pelaku'];
-        $waktuKejadian = $row['waktu_kejadian'];
-        $frekuenseiKejadian = $row['frekuensi_kejadian'];
-        $lokasiKejadian = $row['lokasi_kejadian'];
-        $deskripsiKejadian = $row['deskripsi_kejadian'];
-        $buktiKejadian = $row['bukti_kejadian'];
-        $progress = $row['progress'];
+    if (mysqli_num_rows(($q)) > 1) {
+        while ($row = mysqli_fetch_assoc($q)) {
+            $jenisKasus = $row["jenis_kasus"];
+            $namaPelapor = $row['nama_pelapor'];
+            $nimPelapor = $row['nim_pelapor'];
+            $namaKorban = $row['nama_korban'];
+            $statusPelapor = $row['status_pelapor'];
+            $nimKorban = $row['nim_korban'];
+            $dampakKasus = $row['dampak_kasus'];
+            $jurusanKorban = $row['jurusan_korban'];
+            $namaPelaku = $row['nama_pelaku'];
+            $waktuKejadian = $row['waktu_kejadian'];
+            $frekuenseiKejadian = $row['frekuensi_kejadian'];
+            $lokasiKejadian = $row['lokasi_kejadian'];
+            $deskripsiKejadian = $row['deskripsi_kejadian'];
+            $buktiKejadian = $row['bukti_kejadian'];
+            $progress = $row['progress'];
 
-        $progressReport = "";
+            $progressReport = "";
 
-        if ($progress === "1") {
-            $progressReport = "Sedang Berjalan";
-        } else if ($progres === "2") {
-            $progressReport = "Dibatalkan";
-        } else if ($progress === "3") {
-            $progressReport= "Selesai";
-        }
+            if ($progress === "1") {
+                $progressReport = "Sedang Berjalan";
+            } else if ($progres === "2") {
+                $progressReport = "Dibatalkan";
+            } else if ($progress === "3") {
+                $progressReport = "Selesai";
+            }
 
-        $convertedWaktuKejadian = date('d M Y', strtotime($waktuKejadian));
+            $convertedWaktuKejadian = date('d M Y', strtotime($waktuKejadian));
 
-        $convertedDeskripsi = nl2br($deskripsiKejadian);
+            $convertedDeskripsi = nl2br($deskripsiKejadian);
 
-        if ($buktiKejadian == "") {
-            $buktiKejadian = "Tidak ada bukti kejadian";
-        } else if (strpos($buktiKejadian, "https://") !== false){
-            $buktiKejadian = "<a target='_blank' href='$buktiKejadian'>$buktiKejadian</a>";
-        }
+            if ($buktiKejadian == "") {
+                $buktiKejadian = "Tidak ada bukti kejadian";
+            } else if (strpos($buktiKejadian, "https://") !== false) {
+                $buktiKejadian = "<a target='_blank' href='$buktiKejadian'>$buktiKejadian</a>";
+            }
 
-        if ($namaPelapor === "") {
+            if ($namaPelapor === "") {
 
-            $result = "
-                <div>
+                $result = "
+                <div class='result-form'>
                     <span class='top-form'>
                         <div style='display: flex;flex-direction: column'>
                             <h5 class='title' style='text-align:center'>LAPORAN PERUNDUNGAN</h5>
@@ -99,8 +100,8 @@ if ($_POST) {
                     <p>$convertedDeskripsi</p>
                 </div>
             ";
-        } else if ($namaPelapor !== "") {
-            $result = "
+            } else if ($namaPelapor !== "") {
+                $result = "
                 <div>
                     <span class='top-form'>
                         <div style='display: flex;flex-direction: column'>
@@ -137,9 +138,13 @@ if ($_POST) {
                     <p>$convertedDeskripsi</p>
                 </div>
             ";
+            }
         }
+    } else {
+      $result = "<div class='red-notice'>
+            <p>Mohon maaf, sistem tidak menemukan nomor pengajuan!</p>
+        </div>";
     }
-    
 }
 
 ?>
@@ -160,12 +165,10 @@ if ($_POST) {
                         <input class="form-control" type="number" name="nomor-pengajuan" placeholder="Cth: 123456">
                         <input type="submit" value="Cek Laporan" class="submit-button" style="margin-left: 20px">
                     </div>
-                </form>
-                <?php if ($result != ""):?>
-                <div class="result-form">
+                </form> 
+                <?php if ($result != "") : ?>
                     <?= $result ?>
-                </div>
-                <?php endif;?>
+                <?php endif; ?>
             </div>
         </section>
     </div>
