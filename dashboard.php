@@ -30,7 +30,7 @@ $totalReports = 0;
 $sqlPerundungan = "SELECT * FROM reports WHERE progress = '1' AND jenis_kasus = 'Perundungan' ORDER BY form_id DESC";
 $sqlKekerasanSeksual = "SELECT * FROM reports WHERE progress = '1' AND jenis_kasus = 'Kekerasan Seksual' ORDER BY form_id DESC";
 $sqlIntoleransi = "SELECT * FROM reports WHERE progress = '1' AND jenis_kasus = 'Intoleransi' ORDER BY form_id DESC";
-$sqlAssigned = "SELECT * FROM reports WHERE assign_to = '$id'";
+$sqlAssigned = "SELECT * FROM reports WHERE progress = '1' AND assign_to = '$id'";
 
 $qp = mysqli_query($conn, $sqlPerundungan);
 $qks = mysqli_query($conn, $sqlKekerasanSeksual);
@@ -88,7 +88,7 @@ $totalAssigned = mysqli_num_rows($qa);
                     // 3 = selesai
                     // 4 = baru
                     $counter = 1;
-                    $sql = "SELECT * FROM reports WHERE progress = '4' AND assign_to = '1' ORDER BY form_id DESC";
+                    $sql = "SELECT * FROM reports WHERE progress = '1' ORDER BY form_id DESC";
                     $q = mysqli_query($conn, $sql);
                     while ($row = mysqli_fetch_assoc($q)) {
                         $namaPelapor = $row['nama_pelapor'];
@@ -97,6 +97,11 @@ $totalAssigned = mysqli_num_rows($qa);
                         $jenisKasus = $row['jenis_kasus'];
                         $nomorPengajuan = $row['nomor_pengajuan'];
                         $statusPelapor = $row['status_pelapor'];
+                        if ($statusPelapor === "korban") {
+                            $statusPelapor = "Korban";
+                        } else if ($statusPelapor === "saksi") {
+                            $statusPelapor = "Saksi";
+                        }
                         $nimKorban = $row['nim_korban'];
                         $dampakKasus = $row['dampak_kasus'];
                         $jurusanKorban = $row['jurusan_korban'];
@@ -106,6 +111,8 @@ $totalAssigned = mysqli_num_rows($qa);
                         $lokasiKejadian = $row['lokasi_kejadian'];
                         $deskripsiKejadian = $row['deskripsi_kejadian'];
                         $buktiKejadian = $row['bukti_kejadian'];
+                        $nomorHp = $row['nomor_hp'];
+                        $emailPelapor = $row['email'];
 
                         if ($buktiKejadian == "") {
                             $buktiKejadian = "Tidak ada bukti kejadian";
@@ -150,10 +157,18 @@ $totalAssigned = mysqli_num_rows($qa);
                                         </span>
                                         <label class='result-label'>Jenis Kasus</label>
                                         <p>$jenisKasus</p>
-                                        <label class='result-label'>Nama Korban</label>
-                                        <p>$namaKorban</p>
+                                        <label class='result-label'>Status Pelapor</label>
+                                        <p>$statusPelapor</p>
+                                        <label class='result-label'>Nama Pelapor</label>
+                                        <p>$namaPelapor</p>
+                                        <label class='result-label'>NIM Pelapor</label>
+                                        <p>$nimPelapor</p>
                                         <label class='result-label'>NIM Korban</label>
                                         <p>$nimKorban</p>
+                                        <label class='result-label'>Nomor HP Pelapor</label>
+                                        <p>$nomorHp</p>
+                                        <label class='result-label'>E-mail Pelapor</label>
+                                        <p>$emailPelapor</p>
                                         <label class='result-label'>Dampak Kasus</label>
                                         <p>$dampakKasus</p>
                                         <label class='result-label'>Jurusan Korban</label>

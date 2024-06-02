@@ -20,7 +20,7 @@
 require_once("connect.php");
 include("navbar.php");
 
-$sql = "INSERT INTO reports (jenis_kasus, nama_pelapor, nim_pelapor, status_pelapor, dampak_kasus, nama_korban, email, nomor_hp, nim_korban, jurusan_korban, nama_pelaku, waktu_kejadian, frekuensi_kejadian, lokasi_kejadian, deskripsi_kejadian, bukti_kejadian, nomor_pengajuan, progress) VALUES";
+$sql = "INSERT INTO reports (jenis_kasus, nama_pelapor, nim_pelapor, status_pelapor, dampak_kasus, nama_korban, email, nomor_hp, nim_korban, jurusan_korban, nama_pelaku, waktu_kejadian, frekuensi_kejadian, lokasi_kejadian, deskripsi_kejadian, bukti_kejadian, nomor_pengajuan, progress, assign_to) VALUES";
 
 $result = "";
 
@@ -66,7 +66,7 @@ if (isset($_POST["submit-korban"])) {
     $nomorPengajuan = '';
     $nomorPengajuan = generateNomorPengajuan();
 
-    $values = $sql . "('$postJenisKasus', '', '', '$postStatusPelapor', '$dampakList', '$postNamaKorban', '$postEmailPelapor', '$postNomorHP', '$postNimKorban', '$postJurusanKorban', '$postNamaPelaku', '$postWaktuKejadian', '$postFrekuensiKejadian', '$postLokasiKejadian', '$postDeskripsiKejadian', '$postBuktiKejadian', '$nomorPengajuan', '1')";
+    $values = $sql . "('$postJenisKasus', '', '', '$postStatusPelapor', '$dampakList', '$postNamaKorban', '$postEmailPelapor', '$postNomorHP', '$postNimKorban', '$postJurusanKorban', '$postNamaPelaku', '$postWaktuKejadian', '$postFrekuensiKejadian', '$postLokasiKejadian', '$postDeskripsiKejadian', '$postBuktiKejadian', '$nomorPengajuan', '1', '1')";
     $q = mysqli_query($conn, $values);
 
     $result = "<div class='notice' style='display: flex; flex-direction: row;align-items: baseline; padding: 20px'>
@@ -106,10 +106,10 @@ if (isset($_POST["submit-korban"])) {
     $nomorPengajuan = '';
     $nomorPengajuan = generateNomorPengajuan();
 
-    $values = $sql . " ('$postJenisKasus', '$postNamaPelapor', '$postNimPelapor', '$postStatusPelapor', '$dampakList', '$postNamaKorban', '$postEmailPelapor', '$postNomorHP', '$postNimKorban', '$postJurusanKorban', '$postNamaPelaku', '$postWaktuKejadian', '$postFrekuensiKejadian', '$postLokasiKejadian', '$postDeskripsiKejadian', '$postBuktiKejadian', '$nomorPengajuan', '4')";
+    $values = $sql . " ('$postJenisKasus', '$postNamaPelapor', '$postNimPelapor', '$postStatusPelapor', '$dampakList', '$postNamaKorban', '$postEmailPelapor', '$postNomorHP', '$postNimKorban', '$postJurusanKorban', '$postNamaPelaku', '$postWaktuKejadian', '$postFrekuensiKejadian', '$postLokasiKejadian', '$postDeskripsiKejadian', '$postBuktiKejadian', '$nomorPengajuan', '1', '1')";
     $q = mysqli_query($conn, $values);
     $result = "<div class='notice' style='display: flex; flex-direction: row;align-items: baseline; padding: 20px'>
-        <i class='fa-solid fa-circle-info' style='padding-left: 10px;padding-right: 10px'></i><p>Laporan sudah diajukan! Nomor pengajuan anda <span style='background: #338533;color: white;border-radius: 10px;padding: 5px;'>#nomorPengajuan</span></p>
+        <i class='fa-solid fa-circle-info' style='padding-left: 10px;padding-right: 10px'></i><p>Laporan sudah diajukan! Nomor pengajuan anda <span style='background: #338533;color: white;border-radius: 10px;padding: 5px;'>#$nomorPengajuan</span></p>
     </div>";
 }
 ?>
@@ -147,10 +147,16 @@ if (isset($_POST["submit-korban"])) {
                         </select>
                         <label>Dampak Perundungan (<span style="color:red">*</span>)</label>
                         <div class="checkboxes">
-                            <input type="checkbox" name="dampak-kasus[]" value="Physical"><label for="">Physical</label>
+                            <input type="checkbox" name="dampak-kasus[]" value="Physical"><label for="">Kekerasan Fisik</label>
                         </div>
                         <div class="checkboxes">
-                            <input type="checkbox" name="dampak-kasus[]" value="Mental"><label>Mental</label>
+                            <input type="checkbox" name="dampak-kasus[]" value="Pelecehan"><label>Pelecehan</label>
+                        </div>
+                        <div class="checkboxes">
+                            <input type="checkbox" name="dampak-kasus[]" value="Merendahkan/Menghina"><label>Merendahkan / Menghina</label>
+                        </div>
+                        <div class="checkboxes">
+                            <input type="checkbox" name="dampak-kasus[]" value="Kekerasan Seksual"><label>Kekerasan Seksual</label>
                         </div>
                         <label>Nama Korban (<span style="color:red">*</span>)</label>
                         <input class="form-control" type="text" name="nama-korban" required>
@@ -262,8 +268,8 @@ if (isset($_POST["submit-korban"])) {
                         </select>
                         <label>Lokasi Kejadian (<span style="color:red">*</span>)</label>
                         <input class="form-control" type="text" name="lokasi-kejadian">
-                        <label>Deskripsi Kejadian (<span style="color:red">*</span>)</label>
-                        <textarea class="form-control" name='deskripsi-kejadian' col="5" rows="5" placeholder="Tuliskan deskripsi kejadian secara detil. "></textarea>
+                        <label>Deskripsi Kejadian dan Kronologis Waktu (<span style="color:red">*</span>)</label>
+                        <textarea class="form-control" name='deskripsi-kejadian' col="5" rows="5" placeholder="Tuliskan deskripsi kejadian dan kronologis waktu secara detil. "></textarea>
                         <label>Bukti Kejadian (Opsional)</label>
                         <input class="form-control" type="text" name="bukti-kejadian">
                         <div class='notice' style='display: flex;flex-direction: row; justify-content: space-evenly; align-items: baseline; padding: 2.5%;'>
@@ -290,8 +296,6 @@ if (isset($_POST["submit-korban"])) {
     <script>
         $(document).ready(function() {
 
-            $('')
-
             $("#korban-form").show();
             $("#saksi-form").hide();
             $('#form-selector').change(function() {
@@ -305,6 +309,8 @@ if (isset($_POST["submit-korban"])) {
                     $("#saksi-form").show();
                 }
             });
+
+            
         });
     </script>
 </body>

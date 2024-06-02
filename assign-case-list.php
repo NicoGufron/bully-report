@@ -44,6 +44,12 @@
                         $jenisKasus = $row['jenis_kasus'];
                         $nomorPengajuan = $row['nomor_pengajuan'];
                         $statusPelapor = $row['status_pelapor'];
+                        $statusPelapor = $row['status_pelapor'];
+                        if ($statusPelapor === "korban") {
+                            $statusPelapor = "Korban";
+                        } else if ($statusPelapor === "saksi") {
+                            $statusPelapor = "Saksi";
+                        }
                         $nimKorban = $row['nim_korban'];
                         $dampakKasus = $row['dampak_kasus'];
                         $jurusanKorban = $row['jurusan_korban'];
@@ -53,6 +59,8 @@
                         $lokasiKejadian = $row['lokasi_kejadian'];
                         $deskripsiKejadian = $row['deskripsi_kejadian'];
                         $buktiKejadian = $row['bukti_kejadian'];
+                        $nomorHp = $row['nomor_hp'];
+                        $emailPelapor = $row['email'];      
 
                         if ($buktiKejadian == "") {
                             $buktiKejadian = "Tidak ada bukti kejadian";
@@ -122,10 +130,20 @@
                                         </span>
                                         <label class='result-label'>Jenis Kasus</label>
                                         <p>$jenisKasus</p>
+                                        <label class='result-label'>Status Pelapor</label>
+                                        <p>$statusPelapor</p>
+                                        <label class='result-label'>Nama Pelapor</label>
+                                        <p>$namaPelapor</p>
+                                        <label class='result-label'>NIM Pelapor</label>
+                                        <p>$nimPelapor</p>
                                         <label class='result-label'>Nama Korban</label>
                                         <p>$namaKorban</p>
                                         <label class='result-label'>NIM Korban</label>
                                         <p>$nimKorban</p>
+                                        <label class='result-label'>Nomor HP Pelapor</label>
+                                        <p>$nomorHp</p>
+                                        <label class='result-label'>E-mail Pelapor</label>
+                                        <p>$emailPelapor</p>
                                         <label class='result-label'>Dampak Kasus</label>
                                         <p>$dampakKasus</p>
                                         <label class='result-label'>Jurusan Korban</label>
@@ -151,6 +169,7 @@
                                                 <label class='result-label'>Status Kasus: </label>
                                                 <select class='form-control custom-select' name='progress-report'>
                                                     <option value='1'>On Progress</option>
+                                                    <option value='2'>Dibatalkan</option>
                                                     <option value='2'>Selesai</option>
                                                 </select>
                                                 <label class='result-label' style='margin-bottom: 10px;'>Catatan untuk laporan ini:</label>

@@ -18,8 +18,14 @@ if (isset($_POST['submit-sidenote'])) {
         $sql = "INSERT INTO notes (id, nomor_pengajuan, comment, waktu_komen, commenter) VALUES (0, '$nomorPengajuan', '$comment', '$waktu_komen', '$commenter')";
     }
 
-    $sql = "UPDATE reports SET progress='$progressReport', assign_to = '$assigned' WHERE nomor_pengajuan = '$nomorPengajuan'";
+    if ($progressReport === "2") {
+        $sql = "UPDATE reports SET progress='$progressReport', assign_to = '0' WHERE nomor_pengajuan = '$nomorPengajuan'";    
+    } else {
+        $sql = "UPDATE reports SET progress='$progressReport', assign_to = '$assigned' WHERE nomor_pengajuan = '$nomorPengajuan'";
+    }
+
     mysqli_query($conn, $sql);
+    header("location: dashboard.php");
 }
 
 ?>

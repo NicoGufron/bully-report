@@ -27,13 +27,18 @@ if ($_POST) {
 
     $q = mysqli_query($conn, $sql);
 
-    if (mysqli_num_rows(($q)) > 1) {
+    if (mysqli_num_rows(($q)) >= 1) {
         while ($row = mysqli_fetch_assoc($q)) {
             $jenisKasus = $row["jenis_kasus"];
             $namaPelapor = $row['nama_pelapor'];
             $nimPelapor = $row['nim_pelapor'];
             $namaKorban = $row['nama_korban'];
             $statusPelapor = $row['status_pelapor'];
+            if ($statusPelapor === "korban") {
+                $statusPelapor = "Korban";
+            } else if ($statusPelapor === "saksi") {
+                $statusPelapor = "Saksi";
+            }
             $nimKorban = $row['nim_korban'];
             $dampakKasus = $row['dampak_kasus'];
             $jurusanKorban = $row['jurusan_korban'];
@@ -49,7 +54,7 @@ if ($_POST) {
 
             if ($progress === "1") {
                 $progressReport = "Sedang Berjalan";
-            } else if ($progres === "2") {
+            } else if ($progress === "2") {
                 $progressReport = "Dibatalkan";
             } else if ($progress === "3") {
                 $progressReport = "Selesai";
@@ -78,6 +83,8 @@ if ($_POST) {
                     </span>
                     <label class='result-label'>Jenis Kasus</label>
                     <p>$jenisKasus</p>
+                    <label class='result-label'>Status Pelapor</label>
+                    <p>$statusPelapor</p>
                     <label class='result-label'>Nama Korban</label>
                     <p>$namaKorban</p>
                     <label class='result-label'>NIM Korban</label>
@@ -112,6 +119,8 @@ if ($_POST) {
                     </span>
                     <label class='result-label'>Jenis Kasus</label>
                     <p>$jenisKasus</p>
+                    <label class='result-label'>Status Pelapor</label>
+                    <p>$statusPelapor</p>
                     <label class='result-label'>Nama Pelapor</label>
                     <p>$namaPelapor</p>
                     <label class='result-label'>NIM Pelapor</label>
@@ -141,7 +150,7 @@ if ($_POST) {
             }
         }
     } else {
-      $result = "<div class='red-notice'>
+        $result = "<div class='red-notice'>
             <p>Mohon maaf, sistem tidak menemukan nomor pengajuan!</p>
         </div>";
     }
@@ -165,7 +174,7 @@ if ($_POST) {
                         <input class="form-control" type="number" name="nomor-pengajuan" placeholder="Cth: 123456">
                         <input type="submit" value="Cek Laporan" class="submit-button" style="margin-left: 20px">
                     </div>
-                </form> 
+                </form>
                 <?php if ($result != "") : ?>
                     <?= $result ?>
                 <?php endif; ?>
