@@ -22,7 +22,10 @@ include("navbar.php");
 
 $sql = "INSERT INTO reports (jenis_kasus, nama_pelapor, nim_pelapor, status_pelapor, dampak_kasus, nama_korban, email, nomor_hp, nim_korban, jurusan_korban, nama_pelaku, waktu_kejadian, frekuensi_kejadian, lokasi_kejadian, deskripsi_kejadian, bukti_kejadian, nomor_pengajuan, progress, assign_to) VALUES";
 
-$result = "";
+$result = "<div class='notice' style='display: flex; flex-direction: column;align-items: center; padding: 20px'>
+<p style='font-size: 14px;text-align:center'><strong>Perhatian! Mohon untuk menyimpan, mencatat, atau dengan screenshot nomor pengajuan ini!</strong></p>
+<p style='text-align:center'>Terima kasih atas laporan anda! Nomor pengajuan anda: <br><br><span style='border-radius: 10px;padding: 5px; font-size: 20px;'><strong>#123456</strong></p>
+</div>";
 
 function generateNomorPengajuan(): string
 {
@@ -70,7 +73,7 @@ if (isset($_POST["submit-korban"])) {
     $q = mysqli_query($conn, $values);
 
     $result = "<div class='notice' style='display: flex; flex-direction: row;align-items: baseline; padding: 20px'>
-        <i class='fa-solid fa-circle-info' style='padding-left: 10px;padding-right: 10px'></i><p>Laporan sudah diajukan! Nomor pengajuan anda <span style='background: #338533;color: white;border-radius: 10px;padding: 5px;'>#$nomorPengajuan</span></p>
+        <i class='fa-solid fa-circle-info' style='padding-left: 10px;padding-right: 10px'></i><p>Terima kasih atas laporan anda! Nomor pengajuan anda <span style='background: #338533;color: white;border-radius: 10px;padding: 5px;'>#$nomorPengajuan</span></p>
     </div>";
 } else if (isset($_POST["submit-saksi"])) {
     $postJenisKasus = $_POST["jenis-kasus"];
@@ -145,18 +148,21 @@ if (isset($_POST["submit-korban"])) {
                             <option value="Kekerasan Seksual">Kekerasan Seksual</option>
                             <option value="Intoleransi">Intoleransi</option>
                         </select>
-                        <label>Dampak Perundungan (<span style="color:red">*</span>)</label>
-                        <div class="checkboxes">
-                            <input type="checkbox" name="dampak-kasus[]" value="Physical"><label for="">Kekerasan Fisik</label>
-                        </div>
-                        <div class="checkboxes">
-                            <input type="checkbox" name="dampak-kasus[]" value="Pelecehan"><label>Pelecehan</label>
-                        </div>
-                        <div class="checkboxes">
-                            <input type="checkbox" name="dampak-kasus[]" value="Merendahkan/Menghina"><label>Merendahkan / Menghina</label>
-                        </div>
-                        <div class="checkboxes">
-                            <input type="checkbox" name="dampak-kasus[]" value="Kekerasan Seksual"><label>Kekerasan Seksual</label>
+                        <div style="display: flex; flex-direction: column">
+                            <label>Dampak Perundungan (<span style="color:red">*</span>)</label>
+                            <div class="checkboxes">
+                                <input type="checkbox" name="dampak-kasus[]" value="Physical"><label for="">Fisik</label>
+                            </div>
+                            <div class="checkboxes">
+                                <input type="checkbox" name="dampak-kasus[]" value="Mental"><label>Mental</label>
+                            </div>
+                            <div class="notice">
+                                <span style="display: flex; flex-direction: row; align-items: baseline"><i class="fa-solid fa-circle-info" style="padding-left: 10px;padding-right: 10px"></i><strong>Catatan: </strong></span>
+                                <ul>
+                                    <li>Dampak fisik termasuk dengan: Kekerasan Fisik, Pemerkosaan, Ancaman Kekerasan </li>
+                                    <li>Dampak mental termasuk dengan: Penghinaan, Trauma, dan Gangguan Emosi
+                                </ul>
+                            </div>
                         </div>
                         <label>Nama Korban (<span style="color:red">*</span>)</label>
                         <input class="form-control" type="text" name="nama-korban" required>
@@ -231,12 +237,21 @@ if (isset($_POST["submit-korban"])) {
                         <input class="form-control" type="text" name="nama-pelapor" required>
                         <label>NIM pelapor (Opsional)</label>
                         <input class="form-control" type="text" name="nim-pelapor" required>
-                        <label>Dampak Perundungan (<span style="color:red">*</span>)</label>
-                        <div class="checkboxes">
-                            <input type="checkbox" name="dampak-kasus[]" value="Physical"><label for="">Physical</label>
-                        </div>
-                        <div class="checkboxes">
-                            <input type="checkbox" name="dampak-kasus[]" value="Mental"><label>Mental</label>
+                        <div style="display: flex; flex-direction: column">
+                            <label>Dampak Perundungan (<span style="color:red">*</span>)</label>
+                            <div class="checkboxes">
+                                <input type="checkbox" name="dampak-kasus[]" value="Physical"><label for="">Fisik</label>
+                            </div>
+                            <div class="checkboxes">
+                                <input type="checkbox" name="dampak-kasus[]" value="Mental"><label>Mental</label>
+                            </div>
+                            <div class="notice">
+                                <span style="display: flex; flex-direction: row; align-items: baseline"><i class="fa-solid fa-circle-info" style="padding-left: 10px;padding-right: 10px"></i><strong>Catatan: </strong></span>
+                                <ul>
+                                    <li>Dampak fisik termasuk dengan: Kekerasan Fisik, Pemerkosaan, Ancaman Kekerasan </li>
+                                    <li>Dampak mental termasuk dengan: Penghinaan, Trauma, dan Gangguan Emosi
+                                </ul>
+                            </div>
                         </div>
                         <label>Nama Korban (<span style="color:red">*</span>)</label>
                         <input class="form-control" type="text" name="nama-korban" required>
@@ -260,7 +275,7 @@ if (isset($_POST["submit-korban"])) {
                         <p class="hint">* Masukkan tanggal terakhir kejadian</p>
                         <label>Frekuensi Kejadian (<span style="color:red">*</span>)</label>
                         <select class="form-control" name='frekuensi-kejadian' required>
-                            <option value= "" selected readonly hidden>Silakan dipilih</option>
+                            <option value="" selected readonly hidden>Silakan dipilih</option>
                             <option value="Jarang">Jarang (1 atau 2 kali dalam setahun)</option>
                             <option value="Kadang-kadang">Kadang-Kadang (1 atau 2 kali dalam sebulan)</option>
                             <option value="Sering">Sering (1 atau 2 kali dalam seminggu)</option>
@@ -310,7 +325,7 @@ if (isset($_POST["submit-korban"])) {
                 }
             });
 
-            
+
         });
     </script>
 </body>
