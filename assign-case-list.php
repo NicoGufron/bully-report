@@ -170,7 +170,7 @@
                                                 <select class='form-control custom-select' name='progress-report'>
                                                     <option value='1'>On Progress</option>
                                                     <option value='2'>Dibatalkan</option>
-                                                    <option value='2'>Selesai</option>
+                                                    <option value='3'>Selesai</option>
                                                 </select>
                                                 <label class='result-label' style='margin-bottom: 10px;'>Catatan untuk laporan ini:</label>
                                                 <textarea class='form-control' col='3' rows='2' name='comment'></textarea>

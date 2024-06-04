@@ -142,8 +142,7 @@ h4 {
     border: 1px solid black;
     background-color: #F6911B;
     color: black;
-    padding: 2.5% 5%;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
     transition: 0.5s all;
 }

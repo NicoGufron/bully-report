@@ -26,6 +26,21 @@ if (!isset($_SESSION['username']) && !isset($_SESSION['id'])) {
     header('Location: index.php');
 }
 
+if (isset($_POST['save-changes'])) {
+    $assignTo = $_POST['assign-to'];
+    $progressReport = $_POST['progress-report'];
+    $nomorPengajuan = $_POST['nomor-pengajuan'];
+
+    if ($progressReport == "2") {
+        $assignTo = "0";
+    }
+
+    $sql = "UPDATE reports SET assign_to = '$assignTo', progress = '$progressReport' WHERE nomor_pengajuan = '$nomorPengajuan'";
+    $q = mysqli_query($conn, $sql);
+
+    var_dump($sql);
+}
+
 $id = $_SESSION['id'];
 $usernameSession = $_SESSION['username'];
 $totalReports = 0;
@@ -83,16 +98,15 @@ $totalAssigned = mysqli_num_rows($qa);
             <div class='table-responsive'>
                 <table class="table table-striped table-hover" id="dataTable">
                     <thead>
-                        <tr style="text-align: center";>
-                            <th>Nomor Pengajuan</th>
-                            <th>Nama Laporan</th>
-                            <th>Jenis Kasus</th>
-                            <th>Nama Pelapor</th>
-                            <th>Status Pelapor</th>
-                            <th>Nama Korban</th>
-                            <th>Nama Pelaku</th>
-                            <th>Progress</th>
-                            <th>Details</th>
+                        <tr style="text-align: center" ;>
+                            <th style='text-align:center'>Nomor Pengajuan</th>
+                            <th style='text-align:center'>Jenis Kasus</th>
+                            <th style='text-align:center'>Nama Pelapor</th>
+                            <th style='text-align:center'>Status Pelapor</th>
+                            <th style='text-align:center'>Nama Korban</th>
+                            <th style='text-align:center'>Nama Pelaku</th>
+                            <th style='text-align:center'>Progress</th>
+                            <th style='text-align:center'>Details</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -108,7 +122,6 @@ $totalAssigned = mysqli_num_rows($qa);
                         $q = mysqli_query($conn, $sql);
                         while ($row = mysqli_fetch_assoc($q)) {
                             $namaPelapor = $row['nama_pelapor'];
-                            $namaLaporan = $row['nama_laporan'];
                             $nimPelapor = $row['nim_pelapor'];
                             $namaKorban = $row['nama_korban'];
                             $jenisKasus = $row['jenis_kasus'];
@@ -168,6 +181,23 @@ $totalAssigned = mysqli_num_rows($qa);
                                 <h5 class='title' style='text-align:center'>LAPORAN PERUNDUNGAN</h5>
                                 <p class='nomor-pengajuan'>#$nomorPengajuan</p>
                             </span>
+                            <span style='display: block'>
+                            <form method='post'>
+                                <input type='hidden' name='nomor-pengajuan' value=$nomorPengajuan>
+                                <div style='display: flex;flex-direction: column;margin-right: 20px'>
+                                    $assignment
+                                </div>
+                                <div style='display: flex;flex-direction: column'>
+                                    <label class='result-label'>Status Kasus: </label>
+                                    <select class='form-control custom-select' name='progress-report'>
+                                        <option value='1'>On Progress</option>
+                                        <option value='2'>Dibatalkan</option>
+                                        <option value='3'>Selesai</option>
+                                    </select>
+                                    </div>
+                                <input name='save-changes' type='submit' class='submit-button' value='Simpan Perubahan'>
+                            </form>
+                            </span>
                             <label class='result-label'>Jenis Kasus</label>
                             <p>$jenisKasus</p>
                             <label class='result-label'>Status Pelapor</label>
@@ -201,15 +231,14 @@ $totalAssigned = mysqli_num_rows($qa);
                             ";
 
                             echo "<tr>
-                                <td class='table-child'>$nomorPengajuan</td>
-                                <td class='table-child'>$namaLaporan</td>
-                                <td class='table-child'>$jenisKasus</td>
-                                <td class='table-child'>$namaPelapor</td>
-                                <td class='table-child'>$statusPelapor</td>
-                                <td class='table-child'>$namaKorban</td>
-                                <td class='table-child'>$namaPelaku</td>
-                                <td class='table-child'>$progress</td>
-                                <td class='table-child'><button data-bs-toggle='offcanvas' data-bs-target='#$offcanvasId' data-bs-dokumen='' aria-controls='offcanvasRight'><i class='fa-solid fa-eye'></i></button></td>
+                                <td class='table-child' style='text-align:center'>$nomorPengajuan</td>
+                                <td class='table-child' style='text-align:center'>$jenisKasus</td>
+                                <td class='table-child' style='text-align:center'>$namaPelapor</td>
+                                <td class='table-child' style='text-align:center'>$statusPelapor</td>
+                                <td class='table-child' style='text-align:center'>$namaKorban</td>
+                                <td class='table-child' style='text-align:center'>$namaPelaku</td>
+                                <td class='table-child' style='text-align:center'>$progress</td>
+                                <td class='table-child' style='text-align:center'><button data-bs-toggle='offcanvas' data-bs-target='#$offcanvasId' data-bs-dokumen='' aria-controls='offcanvasRight'><i class='fa-solid fa-eye'></i></button></td>
                             </tr>";
 
                             echo " <div class='offcanvas offcanvas-end w-75' tabindex='-1' id='$offcanvasId' aria-labelledby='offcanvasRightLabel'>
@@ -221,7 +250,6 @@ $totalAssigned = mysqli_num_rows($qa);
                                     $dokumen
                                 </div>
                             </div>";
-
                         }
                         ?>
                     </tbody>
@@ -233,7 +261,7 @@ $totalAssigned = mysqli_num_rows($qa);
 
     <script>
         $(document).ready(function() {
-        $('#dataTable').DataTable({
+            $('#dataTable').DataTable({
                 paging: true,
                 ordering: true,
             });
