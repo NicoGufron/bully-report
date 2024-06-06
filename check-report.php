@@ -109,7 +109,7 @@ if ($_POST) {
             ";
             } else if ($namaPelapor !== "") {
                 $result = "
-                <div>
+                <div class='result-form'>
                     <span class='top-form'>
                         <div style='display: flex;flex-direction: column'>
                             <h5 class='title' style='text-align:center'>LAPORAN PERUNDUNGAN</h5>

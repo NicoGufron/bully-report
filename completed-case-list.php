@@ -33,7 +33,7 @@
             <div class="accordion">
                 <?php
                 $counter = 1;
-                $sql = "SELECT * FROM reports WHERE progress = '3' and assign_to = '$id' ORDER BY form_id DESC";
+                $sql = "SELECT * FROM reports WHERE progress = '3'ORDER BY form_id DESC";
                 $q = mysqli_query($conn, $sql);
                 while ($row = mysqli_fetch_assoc($q)) {
                     $namaPelapor = $row['nama_pelapor'];
