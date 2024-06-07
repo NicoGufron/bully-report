@@ -37,8 +37,6 @@ if (isset($_POST['save-changes'])) {
 
     $sql = "UPDATE reports SET assign_to = '$assignTo', progress = '$progressReport' WHERE nomor_pengajuan = '$nomorPengajuan'";
     $q = mysqli_query($conn, $sql);
-
-    var_dump($sql);
 }
 
 $id = $_SESSION['id'];
@@ -145,6 +143,15 @@ $totalAssigned = mysqli_num_rows($qa);
                             $emailPelapor = $row['email'];
                             // $assignTo = $row['assign_to'];
                             $progress = $row['progress'];
+
+                            if ($progress === "1") {
+                                $progressStatus = "On Progress";
+                            } else if ($progress === "2") {
+                                $progressStatus = "Dibatalkan";
+                            } else if ($progress === "3") {
+                                $progressStatus = "Selesai";
+                            }
+
                             $offcanvasId = "offcanvasRight$nomorPengajuan";
 
                             if ($buktiKejadian == "") {
@@ -237,7 +244,7 @@ $totalAssigned = mysqli_num_rows($qa);
                                 <td class='table-child' style='text-align:center'>$statusPelapor</td>
                                 <td class='table-child' style='text-align:center'>$namaKorban</td>
                                 <td class='table-child' style='text-align:center'>$namaPelaku</td>
-                                <td class='table-child' style='text-align:center'>$progress</td>
+                                <td class='table-child' style='text-align:center'>$progressStatus</td>
                                 <td class='table-child' style='text-align:center'><button data-bs-toggle='offcanvas' data-bs-target='#$offcanvasId' data-bs-dokumen='' aria-controls='offcanvasRight'><i class='fa-solid fa-eye'></i></button></td>
                             </tr>";
 

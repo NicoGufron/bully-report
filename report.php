@@ -80,7 +80,6 @@ if (isset($_POST["submit-korban"])) {
 } else if (isset($_POST["submit-saksi"])) {
     $postJenisKasus = $_POST["jenis-kasus"];
     $postStatusPelapor = $_POST['status-pelapor'];
-    var_dump($postStatusPelapor);
     $postNamaPelapor = $_POST['nama-pelapor'];
     $postNimPelapor = $_POST['nim-pelapor'];
     $postNamaKorban = $_POST['nama-korban'];
