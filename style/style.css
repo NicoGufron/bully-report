@@ -72,7 +72,6 @@ h4 {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
 }
 
 .title {
@@ -131,6 +130,8 @@ h4 {
     color: black;
     padding: 5% 15%;
     font-size: 14px;
+    width: 50%;
+    border: 1px solid black;
     font-weight: bold;
     text-wrap: nowrap;
     transition: 0.5s all;
@@ -147,19 +148,26 @@ h4 {
     transition: 0.5s all;
 }
 
-.main-button:hover, .submit-button:hover {
+.main-button:hover, .submit-button:hover, .login-button:hover {
     background-color: #384C67;
     color: white;
+    border: 1px solid black;
 }
 
 .hotline {
-    padding: 2.5%;
-    margin: 5%;
     display: flex;
+    justify-content: center;
+    margin: 5%;
+    color: white;
+}
+
+.hotline-box {
+    display: flex;
+    padding: 2.5%;
+    align-items: center;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    color: white;
+    width: 50%;
     border-radius: 10px;
     background-color: #D54444;
 }
@@ -242,6 +250,7 @@ select {
 }
 
 .login-section {
+    box-shadow: 0px 4px black;
     display: flex;
     flex-direction: column;
     border: 1px solid black;
@@ -339,6 +348,21 @@ select {
 
 .top-cards i {
     font-size: 3em;
+}
+
+.accordionFaq {
+    margin: 10% 5% 5% 5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.accordion.home {
+    width: 75%;
+}
+
+.accordion-button {
+    background-color: #d1ecf1;
 }
 
 .accordion-item {

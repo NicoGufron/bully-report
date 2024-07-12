@@ -18,13 +18,36 @@
 
 <?php
 include("navbar.php");
+
+$pertanyaan = [
+    "Bagaimana cara untuk lapor perundungan?",
+    "Apa itu perundungan?",
+    "Apa saja tipe perundungan?",
+    "Apabila tidak memiliki bukti, apa yang saya harus lakukan?",
+    "Apa saja peraturan UU yang dianggap berhubungan dengan perundungan?",
+];
+
+$jawaban = [
+    "Pelapor dapat menekan tombol <b>Lapor Perundungan</b> untuk melapor perundungan yang terjadi, dan memasukkan informasi yang dibutuhkan. Pelapor diharapkan untuk selalu aktif untuk mempermudah proses investigasi perundungan. 
+    
+    Apabila sudah mengajukan laporan, maka pelapor akan mendapatkan kode untuk melacak proses pelaporan tersebut.",
+    "Perundungan adalah sebuah tingkah laku yang terjadi dengan tujuan menyakiti orang lain baik secara fisik maupun mental, baik secara langsung maupun tidak langsung, dan bisa terjadi sekali maupun berulang kali.",
+    "Perundungan dibagi 3 tipe:
+    1. Tradisional, yaitu perundungan secara fisik, verbal dan emosional, mencakup tindakan seperti memukul, menendang, mengejek, menghina dan tindakan lain yang bertujuan untuk menyakiti secara langsung.
+
+    2. Seksual, yaitu perundungan yang mengganggu secara seksual
+    
+    3. <i>Cyberbullying</i>, yaitu perundungan yang terjadi melalui teknologi seperti media sosial, pesan teks dan platform online lainnya.",
+    "Apabila pelapor tidak memiliki bukti, maka SATGAS akan mengadakan pertemuan dengan pelapor. Pelapor diminta untuk menyampaikan setiap detil dan menuliskan kronologis pada formulir secara manual.\n\nSesi diskusi dilakukan untuk menggali lebih dalam informasi dari pelapor, seluruh percakapan direkam dan terjadi selama 30 menit hingga 1 jam untuk mencari informasi dan sebagai bukti.",
+    ""
+];
 ?>
 
 <body>
     <div class="container-fluid">
         <section class="main-section">
-            <h4 class="title">Selamat datang di Sistem Pelaporan Perundungan</h4>
-            <p class="subtitle">Laporkan dan berantas bersama!</p>
+            <h4 class="title" style="text-align:center">Selamat datang di Sistem Pelaporan Perundungan</h4>
+            <p class="subtitle" style="text-align:center">Laporkan dan berantas bersama!</p>
             <div class="boxes">
                 <div class="box">
                     <h5><strong>Lapor Perundungan</strong></h5>
@@ -37,15 +60,40 @@ include("navbar.php");
                     <a href="check-report.php"><button class="main-button">Cek Laporan Saya</button></a>
                 </div>
             </div>
-            <div class="hotline">
-                <h4>Hubungi Hotline (Telepon atau Whatsapp)</h4>
-                <span style="display: flex; flex-direction:row;align-items: baseline">
-                    <i class="fa-solid fa-phone fa-lg" style="padding-right: 20px"></i>
-                    <h4>0812-3456-7890</h4>
-                </span>
-                <p>Untuk aduan dan bentuk bantuan lainnya</p>
+            <div class="accordionFaq">
+                <h4 class="title" style="text-align: left;">Pertanyaan yang sering ditanyakan</h4>
+                <br>
+                <div class="accordion home">
+                    <?php
+                    for ($i = 0; $i < count($pertanyaan); $i++) {
+                        echo "<h2 class='accordion-header' id='heading'>
+                            <button class='accordion-button' type='button' data-bs-toggle='collapse' data-bs-target='#collapse$i' aria-expanded='false' aria-controls='collapse'>
+                                <strong>$pertanyaan[$i]</strong>
+                            </button>
+                        </h2>
+                        <div id='collapse$i' class='accordion-collapse collapse' aria-labelledby='headingOne' data-bs-parent='#accordionExample'>
+                            <div class='accordion-body'>
+                                " . nl2br($jawaban[$i]) . "
+                            </div>
+                        </div>";
+                    }
+                    ?>
+                    <div class="accordion-item">
+
+                    </div>
+                </div>
             </div>
-            
+            <div class="hotline">
+                <div class="hotline-box">
+                    <h4>Hubungi Hotline (Telepon atau Whatsapp)</h4>
+                    <span style="display: flex; flex-direction:row;align-items: baseline">
+                        <i class="fa-solid fa-phone fa-lg" style="padding-right: 20px"></i>
+                        <h4>0812-3456-7890</h4>
+                    </span>
+                    <p>Untuk aduan dan bentuk bantuan lainnya</p>
+                </div>
+            </div>
+
         </section>
     </div>
 </body>

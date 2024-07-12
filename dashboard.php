@@ -62,6 +62,12 @@ $totalAssigned = mysqli_num_rows($qa);
 
 <body>
     <?php
+    /// TODO buat tampilan untuk masing2 role admin
+    /// Role admin:
+    /// 1. Superadmin
+    /// 2. Perundungan Umum
+    /// 3. Kekerasan Seksual
+    /// 4. Intoleransi
     ?>
     <div class="container-fluid">
         <section class="dashboard-section">

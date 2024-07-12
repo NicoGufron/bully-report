@@ -5,7 +5,7 @@ session_start();
 <div class='navbar-top'>
     <div style="display: flex; flex-direction: row; align-items:center;">
         <button class="offcanvas-menu" data-bs-toggle="offcanvas" data-bs-target="#offcanvasLeft" aria-controls="offcanvasLeft" style="background-color: transparent; color: #384C67; border: 0px"><i class="fa-solid fa-bars fa-xl"></i></button>
-        <h4>Selamat datang, <?= $_SESSION['username'] ?></h4>
+        <h4>Selamat datang, <?= $_SESSION['username'];?></h4>
     </div>
     <span><a href='logout.php' class='logout-button'><i class="fa-solid fa-right-from-bracket"></i>Keluar</a></span>
 </div>

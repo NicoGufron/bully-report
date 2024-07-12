@@ -14,6 +14,7 @@ if (isset($_SESSION["username"]) && isset($_SESSION['id'])) {
 
         while ($row = mysqli_fetch_assoc($q)) {
             $_SESSION['id'] = $row['id'];
+            $_SESSION['role'] = $row['role'];
         }
         $_SESSION['username'] = $username;
 
@@ -61,10 +62,10 @@ if (isset($_SESSION["username"]) && isset($_SESSION['id'])) {
                 <div class="admin-access">
                     <h3 class="title"> Akses Admin Panel</h3>
                     <div class="login-section">
-                        <h3>Masuk ke Akun</h3>
+                        <h3 class="title">Masuk ke Dashboard Admin</h3>
                         <br>
                         <?= $result; ?>
-                        <form class="form-group signup-form" method="post">
+                        <form class="form-group signup-form" method="post" style="display: flex; flex-direction: column">
                             <label>Username</label>
                             <input class="form-control" type="text" name="username">
                             <p></p>

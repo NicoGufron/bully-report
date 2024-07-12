@@ -55,7 +55,9 @@ if (isset($_POST["submit-korban"])) {
     $postNimKorban = $_POST['nim-korban'];
     $postJurusanKorban = $_POST['jurusan-korban'];
     $postNamaPelaku = $_POST['nama-pelaku'];
-    $postWaktuKejadian = $_POST['waktu-kejadian'];
+
+    $postWaktuKejadian = $_POST['waktu-kejadian-combined'];
+    var_dump($postWaktuKejadian);
     $postFrekuensiKejadian = $_POST['frekuensi-kejadian'];
     $postLokasiKejadian = $_POST['lokasi-kejadian'];
     $postDeskripsiKejadian = $_POST['deskripsi-kejadian'];
@@ -69,13 +71,8 @@ if (isset($_POST["submit-korban"])) {
     $values = $sql . "('$postJenisKasus', '', '', '$postStatusPelapor', '$dampakList', '$postNamaKorban', '$postEmailPelapor', '$postNomorHP', '$postNimKorban', '$postJurusanKorban', '$postNamaPelaku', '$postWaktuKejadian', '$postFrekuensiKejadian', '$postLokasiKejadian', '$postDeskripsiKejadian', '$postBuktiKejadian', '$nomorPengajuan', '1', '1')";
     $q = mysqli_query($conn, $values);
 
-    $result = "<div class='notice' style='display: flex; flex-direction: column;align-items: center; padding: 20px'>
-    <div>
-        <i style='margin-top: 10px; margin-bottom: 20px;' class='fa-solid fa-circle-exclamation fa-xl'></i>
-    </div>
-    <p style='font-size: 14px;text-align:center'>
-        <strong>Mohon untuk menyimpan, mencatat, atau dengan screenshot nomor pengajuan ini!</strong></p>
-        <p style='text-align:center'>Terima kasih atas laporan anda! Nomor pengajuan anda: <br><br><span style='border-radius: 10px;padding: 5px; font-size: 20px;'><strong>#$nomorPengajuan</strong></p>
+    $result = "<div class='notice' style='display: flex; flex-direction: row;align-items: baseline; padding: 20px'>
+        <i class='fa-solid fa-circle-info' style='padding-left: 10px;padding-right: 10px'></i><p>Terima kasih atas laporan anda! Nomor pengajuan anda <span style='background: #338533;color: white;border-radius: 10px;padding: 5px;'>#$nomorPengajuan</span></p>
     </div>";
 } else if (isset($_POST["submit-saksi"])) {
     $postJenisKasus = $_POST["jenis-kasus"];
@@ -188,20 +185,24 @@ if (isset($_POST["submit-korban"])) {
                         </select>
                         <label>Nama Pelaku (<span style="color:red">*</span>)</label>
                         <input class="form-control" type="text" name="nama-pelaku" required>
+                        <label>Lokasi Kejadian (<span style="color:red">*</span>)</label>
+                        <input class="form-control" type="text" name="lokasi-kejadian" required>
                         <label>Frekuensi Kejadian (<span style="color:red">*</span>)</label>
-                        <select class="form-control" name="frekuensi-kejadian" required>
+                        <select class="form-control" id="frekuensi-kejadian-korban" name="frekuensi-kejadian" required>
                             <option value="" selected readonly hidden>Silakan dipilih</option>
                             <option value="Jarang">Jarang (1 atau 2 kali dalam setahun)</option>
                             <option value="Kadang-kadang">Kadang-Kadang (1 atau 2 kali dalam sebulan)</option>
                             <option value="Sering">Sering (1 atau 2 kali dalam seminggu)</option>
                             <option value="Setiap Hari">Setiap Hari</option>
                         </select>
-                        <label>Waktu Kejadian (<span style="color:red">*</span>)</label>
-                        <input class="form-control" type="date" name="waktu-kejadian" required>
-                        <p class="hint">* Masukkan tanggal terakhir kejadian</p>
-                        <label>Lokasi Kejadian (<span style="color:red">*</span>)</label>
-                        <input class="form-control" type="text" name="lokasi-kejadian" required>
-                       
+                        <div class="waktu-kejadian-jq">
+
+                            <div class="waktu-kejadian-korban">
+                                <label>Waktu Kejadian (<span style="color:red">*</span>)</label>
+                                <input class="form-control" type="date" name="waktu-kejadian" required>
+                                <p class="hint">* Masukkan tanggal terakhir kejadian</p>
+                            </div>
+                        </div>
                         <label>Deskripsi dan Kronologis Kejadian:(<span style="color:red">*</span>)</label>
                         <textarea class="form-control" name="deskripsi-kejadian" col="5" rows="5" placeholder="Tuliskan deskripsi kejadian secara detil." required></textarea>
                         <label>Bukti Kejadian (Opsional)</label>
@@ -277,6 +278,11 @@ if (isset($_POST["submit-korban"])) {
                         </select>
                         <label>Nama Pelaku (<span style="color:red">*</span>)</label>
                         <input class="form-control" type="text" name="nama-pelaku" required>
+                        <label>Waktu Kejadian (<span style="color:red">*</span>)</label>
+                        <input class="form-control" type="date" name="waktu-kejadian" required>
+                        <p class="hint">* Masukkan tanggal terakhir kejadian</p>
+                        <label>Lokasi Kejadian (<span style="color:red">*</span>)</label>
+                        <input class="form-control" type="text" name="lokasi-kejadian">
                         <label>Frekuensi Kejadian (<span style="color:red">*</span>)</label>
                         <select class="form-control" name='frekuensi-kejadian' required>
                             <option value="" selected readonly hidden>Silakan dipilih</option>
@@ -285,11 +291,6 @@ if (isset($_POST["submit-korban"])) {
                             <option value="Sering">Sering (1 atau 2 kali dalam seminggu)</option>
                             <option value="Setiap Hari">Setiap Hari</option>
                         </select>
-                        <label>Waktu Kejadian (<span style="color:red">*</span>)</label>
-                        <input class="form-control" type="date" name="waktu-kejadian" required>
-                        <p class="hint">* Masukkan tanggal terakhir kejadian</p>
-                        <label>Lokasi Kejadian (<span style="color:red">*</span>)</label>
-                        <input class="form-control" type="text" name="lokasi-kejadian">
                         <label>Deskripsi dan Kronologis Kejadian(<span style="color:red">*</span>)</label>
                         <textarea class="form-control" name='deskripsi-kejadian' col="5" rows="5" placeholder="Tuliskan deskripsi kejadian dan kronologis waktu secara detil. "></textarea>
                         <label>Bukti Kejadian (Opsional)</label>
@@ -320,6 +321,53 @@ if (isset($_POST["submit-korban"])) {
 
             $("#korban-form").show();
             $("#saksi-form").hide();
+
+            // const waktuKejadianContainer = $('<div></div>');
+            const waktuKejadianContainer = $(".waktu-kejadian-korban");
+
+            $("#frekuensi-kejadian-korban").change(function() {
+                var frekuensiValue = $(this).val();
+                
+                waktuKejadianContainer.empty();
+                
+                let numInputFields;
+                switch(frekuensiValue) {
+                    case 'Jarang':
+                        numInputFields = 2;
+                        break;
+                    case 'Kadang-kadang':
+                        numInputFields = 3;
+                        break;
+                    case 'Sering':
+                        numInputFields = 4;
+                        break;
+                    default:
+                        numInputFields = 1;
+                }
+
+                for (let i = 0; i < numInputFields; i++) {
+                    const inputField = $(`<label>Waktu Kejadian (<span style='color:red'>*</span>)</label><input class='form-control' type='date' name='waktu-kejadian[]' required><p class='hint'>* Masukkan tanggal kejadian</p>`);
+                    waktuKejadianContainer.append(inputField);
+                }
+
+                /// Tambah input waktu kejadian ke parent element (waktu-kejadian-jq)
+                const parentElement = waktuKejadianContainer.parent();
+                parentElement.html(waktuKejadianContainer);
+            });
+
+            const waktuKejadianValues = [];
+
+            // Join semua value waktu kejadian
+            waktuKejadianContainer.find('input[type="date"][name="waktu-kejadian[]"]').each(function() {
+                
+                waktuKejadianValues.push($(this).val());
+            })
+
+            const joinedValues = waktuKejadianValues.join("|");
+
+            const hiddenInputField = $('<input type="hidden" name="waktu-kejadian-combined" value="' + joinedValues + '">');
+            waktuKejadianContainer.parent().append(hiddenInputField);
+
             $('#form-selector').change(function() {
                 var selectedValue = $(this).val();
                 $('.status-pelapor').val(selectedValue);
