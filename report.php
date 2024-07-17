@@ -20,102 +20,16 @@
 require_once("connect.php");
 include("navbar.php");
 
-$sql = "INSERT INTO reports (jenis_kasus, nama_pelapor, nim_pelapor, status_pelapor, dampak_kasus, nama_korban, email, nomor_hp, nim_korban, jurusan_korban, nama_pelaku, waktu_kejadian, frekuensi_kejadian, lokasi_kejadian, deskripsi_kejadian, bukti_kejadian, nomor_pengajuan, progress, assign_to) VALUES";
-
 $result = "";
 
-function generateNomorPengajuan(): string
-{
-    $characters = "01234456789";
-    $randomString = '';
-    $maxNumber = strlen($characters) - 1;
-    for ($i = 0; $i < 6; $i++) {
-        $randomString .= $characters[rand(0, $maxNumber)];
-    }
-    return $randomString;
-}
-
-if (isset($_POST["submit-korban"])) {
-    $postJenisKasus = $_POST["jenis-kasus"];
-    $postStatusPelapor = $_POST['status-pelapor'];
-    $postDampakKasus = $_POST['dampak-kasus'];
-
-    if (isset($postDampakKasus) && is_array($postDampakKasus)) {
-        // jika hanya ada 1 checkbox
-        if (count($postDampakKasus) === 1) {
-            $dampakList = $postDampakKasus[0];
-        } else {
-            $dampakList = implode(', ', $postDampakKasus);
-        }
-
-        // var_dump("Dampak: $dampakList");
-    }
-
-    $postNamaKorban = $_POST['nama-korban'];
-    $postNimKorban = $_POST['nim-korban'];
-    $postJurusanKorban = $_POST['jurusan-korban'];
-    $postNamaPelaku = $_POST['nama-pelaku'];
-
-    $postWaktuKejadian = $_POST['waktu-kejadian-combined'];
-    var_dump($postWaktuKejadian);
-    $postFrekuensiKejadian = $_POST['frekuensi-kejadian'];
-    $postLokasiKejadian = $_POST['lokasi-kejadian'];
-    $postDeskripsiKejadian = $_POST['deskripsi-kejadian'];
-    $postNomorHP = $_POST['nomor-hp'];
-    $postBuktiKejadian = $_POST['bukti-kejadian'];
-    $postEmailPelapor = $_POST['email-pelapor'];
-
-    $nomorPengajuan = '';
-    $nomorPengajuan = generateNomorPengajuan();
-
-    $values = $sql . "('$postJenisKasus', '', '', '$postStatusPelapor', '$dampakList', '$postNamaKorban', '$postEmailPelapor', '$postNomorHP', '$postNimKorban', '$postJurusanKorban', '$postNamaPelaku', '$postWaktuKejadian', '$postFrekuensiKejadian', '$postLokasiKejadian', '$postDeskripsiKejadian', '$postBuktiKejadian', '$nomorPengajuan', '1', '1')";
-    $q = mysqli_query($conn, $values);
-
-    $result = "<div class='notice' style='display: flex; flex-direction: row;align-items: baseline; padding: 20px'>
-        <i class='fa-solid fa-circle-info' style='padding-left: 10px;padding-right: 10px'></i><p>Terima kasih atas laporan anda! Nomor pengajuan anda <span style='background: #338533;color: white;border-radius: 10px;padding: 5px;'>#$nomorPengajuan</span></p>
-    </div>";
-} else if (isset($_POST["submit-saksi"])) {
-    $postJenisKasus = $_POST["jenis-kasus"];
-    $postStatusPelapor = $_POST['status-pelapor'];
-    $postNamaPelapor = $_POST['nama-pelapor'];
-    $postNimPelapor = $_POST['nim-pelapor'];
-    $postNamaKorban = $_POST['nama-korban'];
-    $postNimKorban = $_POST['nim-korban'];
-    $postDampakKasus = $_POST['dampak-kasus'];
-
-    if (isset($postDampakKasus) && is_array($postDampakKasus)) {
-        // jika hanya ada 1 checkbox
-        if (count($postDampakKasus) === 1) {
-            $dampakList = $postDampakKasus[0];
-        } else {
-            $dampakList = implode(', ', $postDampakKasus);
-        }
-
-        // var_dump("Dampak: $dampakList");
-    }
-
-    $postJurusanKorban = $_POST['jurusan-korban'];
-    $postNamaPelaku = $_POST['nama-pelaku'];
-    $postWaktuKejadian = $_POST['waktu-kejadian'];
-    $postFrekuensiKejadian = $_POST['frekuensi-kejadian'];
-    $postLokasiKejadian = $_POST['lokasi-kejadian'];
-    $postDeskripsiKejadian = $_POST['deskripsi-kejadian'];
-    $postNomorHP = $_POST['nomor-hp'];
-    $postEmailPelapor = $_POST['email-pelapor'];
-    $postBuktiKejadian = $_POST['bukti-kejadian'];
-
-    $nomorPengajuan = '';
-    $nomorPengajuan = generateNomorPengajuan();
-
-    $values = $sql . " ('$postJenisKasus', '$postNamaPelapor', '$postNimPelapor', '$postStatusPelapor', '$dampakList', '$postNamaKorban', '$postEmailPelapor', '$postNomorHP', '$postNimKorban', '$postJurusanKorban', '$postNamaPelaku', '$postWaktuKejadian', '$postFrekuensiKejadian', '$postLokasiKejadian', '$postDeskripsiKejadian', '$postBuktiKejadian', '$nomorPengajuan', '1', '1')";
-    $q = mysqli_query($conn, $values);
+if (isset($_GET['message']) && isset($_GET['code']) && isset($_GET['role'])) {
     $result = "<div class='notice' style='display: flex; flex-direction: column;align-items: center; padding: 20px'>
     <div>
         <i style='margin-top: 10px; margin-bottom: 20px;' class='fa-solid fa-circle-exclamation fa-xl'></i>
     </div>
     <p style='font-size: 14px;text-align:center'>
-        <strong>Mohon untuk menyimpan, mencatat, atau dengan screenshot nomor pengajuan ini!</strong></p>
-        <p style='text-align:center'>Terima kasih atas laporan anda! Nomor pengajuan anda: <br><br><span style='border-radius: 10px;padding: 5px; font-size: 20px;'><strong>#$nomorPengajuan</strong></p>
+        <strong>Mohon untuk menyimpan, mencatat, atau dengan mengecek email anda untuk nomor pengajuan ini!</strong></p>
+        <p style='text-align:center'>Terima kasih atas laporan anda! Nomor pengajuan anda: <br><br><span style='border-radius: 10px;padding: 5px; font-size: 20px;'><strong>#" . $_GET['code'] . "</strong></p>
     </div>";
 }
 ?>
@@ -142,7 +56,7 @@ if (isset($_POST["submit-korban"])) {
                         <option value="saksi">Saksi</option>
                     </select>
                     <!-- Formulir Korban -->
-                    <form method="post" id="korban-form">
+                    <form method="post" id="korban-form" action="action.php">
                         <input type='hidden' name='status-pelapor' class='status-pelapor'>
                         <label>Jenis Perundungan (<span style="color:red">*</span>)</label>
                         <select class="form-control" name="jenis-kasus" required>
@@ -185,6 +99,13 @@ if (isset($_POST["submit-korban"])) {
                         </select>
                         <label>Nama Pelaku (<span style="color:red">*</span>)</label>
                         <input class="form-control" type="text" name="nama-pelaku" required>
+                        <label>Status Pelaku (<span style="color:red">*</span>)</label>
+                        <select class="form-control" name="status-pelaku" required>
+                            <option value="" selected readonly hidden>Silahkan dipilih</option>
+                            <option value="2">Dosen</option>
+                            <option value="3">TENDIK (Tenaga Pendidik)</option>
+                            <option value="4">Mahasiswa</option>
+                        </select>
                         <label>Lokasi Kejadian (<span style="color:red">*</span>)</label>
                         <input class="form-control" type="text" name="lokasi-kejadian" required>
                         <label>Frekuensi Kejadian (<span style="color:red">*</span>)</label>
@@ -226,7 +147,7 @@ if (isset($_POST["submit-korban"])) {
                     </form>
 
                     <!-- Formulir Saksi -->
-                    <form method="post" id="saksi-form" style="display: none">
+                    <form method="post" id="saksi-form" style="display: none" action="action.php">
                         <input type='hidden' name='status-pelapor' class='status-pelapor'>
                         <!-- <label>Status pelapor (<span style="color:red">*</span>)</label>
                         <select id="form-selector" class="form-control">
@@ -278,6 +199,13 @@ if (isset($_POST["submit-korban"])) {
                         </select>
                         <label>Nama Pelaku (<span style="color:red">*</span>)</label>
                         <input class="form-control" type="text" name="nama-pelaku" required>
+                        <label>Status Pelaku (<span style="color:red">*</span>)</label>
+                        <select class="form-control" name="status-pelaku" required>
+                            <option value="" selected readonly hidden>Silahkan dipilih</option>
+                            <option value="2">Dosen</option>
+                            <option value="3">TENDIK (Tenaga Pendidik)</option>
+                            <option value="4">Mahasiswa</option>
+                        </select>
                         <label>Waktu Kejadian (<span style="color:red">*</span>)</label>
                         <input class="form-control" type="date" name="waktu-kejadian" required>
                         <p class="hint">* Masukkan tanggal terakhir kejadian</p>
@@ -327,11 +255,11 @@ if (isset($_POST["submit-korban"])) {
 
             $("#frekuensi-kejadian-korban").change(function() {
                 var frekuensiValue = $(this).val();
-                
+
                 waktuKejadianContainer.empty();
-                
+
                 let numInputFields;
-                switch(frekuensiValue) {
+                switch (frekuensiValue) {
                     case 'Jarang':
                         numInputFields = 2;
                         break;
@@ -359,7 +287,7 @@ if (isset($_POST["submit-korban"])) {
 
             // Join semua value waktu kejadian
             waktuKejadianContainer.find('input[type="date"][name="waktu-kejadian[]"]').each(function() {
-                
+
                 waktuKejadianValues.push($(this).val());
             })
 

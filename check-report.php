@@ -53,11 +53,19 @@ if ($_POST) {
             $progressReport = "";
 
             if ($progress === "1") {
-                $progressReport = "Sedang Berjalan";
+                $progressStatus = "Diterima";
             } else if ($progress === "2") {
-                $progressReport = "Dibatalkan";
+                $progressStatus = "On Progress - Rapat Tim Satgas";
             } else if ($progress === "3") {
-                $progressReport = "Selesai";
+                $progressStatus = "Pertemuan dengan Pelapor";
+            } else if ($progress === "4") {
+                $progressStatus = "Sesi Diskusi";
+            } else if ($progress === "5") { 
+                $progressStatus = "Perekaman Bukti";
+            } else if ($progress === "6") {
+                $progressStatus = "Rapat Rektorat, CSD, Program Studi yang Terlibat, dan Satgas";
+            } else if ($progres === "7") {
+                $progressStatus = "Selesai";
             }
 
             $convertedWaktuKejadian = date('d M Y', strtotime($waktuKejadian));

@@ -24,18 +24,25 @@
     $id = $_SESSION['id'];
     $usernameSession = $_SESSION['username'];
 
-
     ?>
 
     <div class="container-fluid">
         <section class="on-progress-section-cases">
             <div class="reports">
-                <h4 class="title">Laporan Perundungan Yang Ditugaskan</h4>
+                <h4 class="title">Laporan Perundungan yang Sedang Aktif</h4>
                 <p class="subtitle">Diurut berdasarkan paling baru</p>
                 <div class="accordion">
                     <?php
                     $counter = 1;
-                    $sql = "SELECT * FROM reports WHERE progress = '1' and assign_to = '$id' ORDER BY form_id DESC";
+                    $sql = "SELECT * FROM reports WHERE progress = '2' OR progress = '3' OR progress = '4' OR progress = '5' OR progress = '6'";
+                    if (isset($_SESSION['role']) && $_SESSION['role'] === "2") {
+                        $sql = $sql . "AND status_pelaku = 2";
+                    } else if ($isset($_SESSION['role'] && $_SESSION['role'] === "3")) {
+                        $sql = $sql . "AND status_pelaku = 3";
+                    } else if ($isset($_SESSION['role'] && $_SESSION['role'] === "4")) {
+                        $sql = $sql . "AND status_pelaku = 4";
+                    }
+
                     $q = mysqli_query($conn, $sql);
                     while ($row = mysqli_fetch_assoc($q)) {
                         $namaPelapor = $row['nama_pelapor'];
@@ -60,7 +67,7 @@
                         $deskripsiKejadian = $row['deskripsi_kejadian'];
                         $buktiKejadian = $row['bukti_kejadian'];
                         $nomorHp = $row['nomor_hp'];
-                        $emailPelapor = $row['email'];      
+                        $emailPelapor = $row['email'];
 
                         if ($buktiKejadian == "") {
                             $buktiKejadian = "Tidak ada bukti kejadian";
@@ -68,24 +75,15 @@
                             $buktiKejadian = "<a target='_blank' href='$buktiKejadian'>$buktiKejadian</a>";
                         }
 
-                        $convertedWaktuKejadian = date('d M Y', strtotime($waktuKejadian));
+                        $convertedWaktuKejadian = explode(",", $waktuKejadian);
+                        $arrayKejadian = "";
 
-                        $assignmentSql = "SELECT * FROM accounts";
-                        $assignmentTop = "<label class='result-label'>Tugaskan kasus ini ke: </label>
-                            <select class='form-control custom-select' name='assign-to'>";
-                        $assignmentMiddle = '';
-                        $result = mysqli_query($conn, $assignmentSql);
-
-                        while ($accounts = mysqli_fetch_assoc($result)) {
-                            $id = $accounts['id'];
-                            $username = $accounts['username'];
-
-                            $assignmentMiddle .= "<option value='$id'>$username</option>";
+                        $con = 1;
+                        
+                        for ($i = 0; $i < count($convertedWaktuKejadian); $i++) {
+                            $arrayKejadian .= nl2br("Kejadian $con : ".date('D, d M Y', strtotime($convertedWaktuKejadian[$i]))."\n");
+                            $con++;
                         }
-
-                        $assignmentEnd = "</select>";
-
-                        $assignment = $assignmentTop . $assignmentMiddle . $assignmentEnd;
 
                         $convertedDeskripsi = nl2br($deskripsiKejadian);
                         $sqlNotes = "SELECT * FROM notes WHERE nomor_pengajuan = $nomorPengajuan";
@@ -153,7 +151,7 @@
                                         <label class='result-label'>Bukti Kejadian</label>
                                         <p>$buktiKejadian</p>
                                         <label class='result-label'>Waktu Kejadian</label>
-                                        <p>$convertedWaktuKejadian</p>
+                                        <p>$arrayKejadian</p>
                                         <label class='result-label'>Frekuensi Kejadian</label>
                                         <p>$frekuenseiKejadian</p>
                                         <label class='result-label'>Lokasi Kejadian</label>
@@ -164,13 +162,16 @@
                                         <form method='post' action='submit.php'>
                                             <input type='hidden' name='nomor-pengajuan' value='$nomorPengajuan'>
                                             <div class='sidenote'>
-                                                $assignment
                                                 <input type='hidden' name='commenter' value='$usernameSession'>
                                                 <label class='result-label'>Status Kasus: </label>
                                                 <select class='form-control custom-select' name='progress-report'>
-                                                    <option value='1'>On Progress</option>
-                                                    <option value='2'>Dibatalkan</option>
-                                                    <option value='3'>Selesai</option>
+                                                    <option value='1'>Diterima</option>
+                                                    <option value='2'>On Progress - Rapat Tim Satgas</option>
+                                                    <option value='3'>Pertemuan dengan Pelapor</option>
+                                                    <option value='4'>Sesi Diskusi</option>
+                                                    <option value='5'>Perekaman Bukti</option>
+                                                    <option value='6'>Rapat Rektorat, CSD, Program Studi yang Terlibat, dan Satgas</option>
+                                                    <option value='7'>Selesai</option>
                                                 </select>
                                                 <label class='result-label' style='margin-bottom: 10px;'>Catatan untuk laporan ini:</label>
                                                 <textarea class='form-control' col='3' rows='2' name='comment'></textarea>

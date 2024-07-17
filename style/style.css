@@ -146,9 +146,11 @@ h4 {
     font-size: 12px;
     font-weight: bold;
     transition: 0.5s all;
+    box-shadow: 0px 2px black;
 }
 
 .main-button:hover, .submit-button:hover, .login-button:hover {
+    box-shadow: 0px 0px;
     background-color: #384C67;
     color: white;
     border: 1px solid black;

@@ -30,21 +30,22 @@
 
     <div class="container-fluid">
         <section class='completed-cases'>
-            <h4 class='title'>Laporan Perundungan yang sudah Selesai</h4>
+            <h4 class='title'>Laporan Perundungan yang Sudah Selesai</h4>
             <p class="subtitle">Data diurutkan dari yang paling baru</p>
 
             <div class='table-responsive'>
                 <table class="table table-striped table-hover" id="dataTable">
                     <thead>
                         <tr style="text-align: center" ;>
-                            <th style='text-align:center'>Nomor Pengajuan</th>
-                            <th style='text-align:center'>Jenis Kasus</th>
-                            <th style='text-align:center'>Nama Pelapor</th>
-                            <th style='text-align:center'>Status Pelapor</th>
-                            <th style='text-align:center'>Nama Korban</th>
-                            <th style='text-align:center'>Nama Pelaku</th>
-                            <th style='text-align:center'>Progress</th>
-                            <th style='text-align:center'>Details</th>
+                            <th style='text-align:center;font-size:0.875rem'>Nomor Pengajuan</th>
+                            <th style='text-align:center;font-size:0.875rem'>Jenis Kasus</th>
+                            <th style='text-align:center;font-size:0.875rem'>Nama Pelapor</th>
+                            <th style='text-align:center;font-size:0.875rem'>Status Pelapor</th>
+                            <th style='text-align:center;font-size:0.875rem'>Nama Korban</th>
+                            <th style='text-align:center;font-size:0.875rem'>Nama Pelaku</th>
+                            <th style='text-align:center;font-size:0.875rem'>Status Pelaku</th>
+                            <th style='text-align:center;font-size:0.875rem'>Progress</th>
+                            <th style='text-align:center;font-size:0.875rem'>Details</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,7 +57,7 @@
                         // 4 = baru
                         $counter = 1;
                         $offcanvas = "";
-                        $sql = "SELECT * FROM reports WHERE progress = '3' ORDER BY form_id DESC";
+                        $sql = "SELECT * FROM reports WHERE progress = '7'";
                         $q = mysqli_query($conn, $sql);
                         while ($row = mysqli_fetch_assoc($q)) {
                             $namaPelapor = $row['nama_pelapor'];
@@ -74,6 +75,17 @@
                             $dampakKasus = $row['dampak_kasus'];
                             $jurusanKorban = $row['jurusan_korban'];
                             $namaPelaku = $row['nama_pelaku'];
+                            $statusPelaku = $row['status_pelaku'];
+
+                            $detailStatusPelaku = "";
+                            if ($statusPelaku === "2") {
+                                $detailStatusPelaku = "Dosen";
+                            } else if ($statusPelaku === "3") {
+                                $detailStatusPelaku = "Tendik (Tenaga Pendidik)";
+                            } else if ($statusPelaku === "4") {
+                                $detailStatusPelaku = "Mahasiswa";
+                            }
+
                             $waktuKejadian = $row['waktu_kejadian'];
                             $frekuenseiKejadian = $row['frekuensi_kejadian'];
                             $lokasiKejadian = $row['lokasi_kejadian'];
@@ -84,42 +96,38 @@
                             // $assignTo = $row['assign_to'];
                             $progress = $row['progress'];
                             if ($progress === "1") {
-                                $progressStatus = "On Progress";
+                                $progressStatus = "Diterima";
                             } else if ($progress === "2") {
-                                $progressStatus = "Dibatalkan";
+                                $progressStatus = "On Progress - Rapat Tim Satgas";
                             } else if ($progress === "3") {
+                                $progressStatus = "Pertemuan dengan Pelapor";
+                            } else if ($progress === "4") {
+                                $progressStatus = "Sesi Diskusi";
+                            } else if ($progress === "5") { 
+                                $progressStatus = "Perekaman Bukti";
+                            } else if ($progress === "6") {
+                                $progressStatus = "Rapat Rektorat, CSD, Program Studi yang Terlibat, dan Satgas";
+                            } else if ($progress === "7") {
                                 $progressStatus = "Selesai";
                             }
-                            $offcanvasId = "offcanvasRight$nomorPengajuan";
 
+                            $offcanvasId = "offcanvasRight$nomorPengajuan";
+                            $convertedDeskripsi = nl2br($deskripsiKejadian);
                             if ($buktiKejadian == "") {
                                 $buktiKejadian = "Tidak ada bukti kejadian";
                             } else if (strpos($buktiKejadian, "https://") !== false) {
                                 $buktiKejadian = "<a target='_blank' href='$buktiKejadian'>$buktiKejadian</a>";
                             }
 
-                            $convertedWaktuKejadian = date('d M Y', strtotime($waktuKejadian));
+                            $convertedWaktuKejadian = explode(",", $waktuKejadian);
+                            $arrayKejadian = "";
 
-                            $assignmentSql = "SELECT * FROM accounts";
+                            $con = 1;
 
-                            $assignmentTop = "<label class='result-label'>Tugaskan kasus ini ke: </label>
-                            <select class='form-control custom-select' id='assign-to-$nomorPengajuan' name='assign-to'>";
-                            $assignmentMiddle = '';
-
-                            $result = mysqli_query($conn, $assignmentSql);
-
-                            while ($accounts = mysqli_fetch_assoc($result)) {
-                                $id = $accounts['id'];
-                                $username = $accounts['username'];
-
-                                $assignmentMiddle .= "<option value='$id'>$username</option>";
+                            for ($i = 0; $i < count($convertedWaktuKejadian); $i++) {
+                                $arrayKejadian .= nl2br("Kejadian $con : ".date('D, d M Y', strtotime($convertedWaktuKejadian[$i]))."\n");
+                                $con++;
                             }
-
-                            $assignmentEnd = "</select>";
-
-                            $assignment = $assignmentTop . $assignmentMiddle . $assignmentEnd;
-
-                            $convertedDeskripsi = nl2br($deskripsiKejadian);
 
                             $dokumen = "
                             <span class='top-form'>
@@ -146,10 +154,12 @@
                             <p>$jurusanKorban</p>
                             <label class='result-label'>Nama Pelaku</label>
                             <p>$namaPelaku</p>
+                            <label class='result-label'>Status Pelaku</label>
+                            <p>$detailStatusPelaku</p>
                             <label class='result-label'>Bukti Kejadian</label>
                             <p>$buktiKejadian</p>
                             <label class='result-label'>Waktu Kejadian</label>
-                            <p>$convertedWaktuKejadian</p>
+                            <p>$$arrayKejadian</p>
                             <label class='result-label'>Frekuensi Kejadian</label>
                             <p>$frekuenseiKejadian</p>
                             <label class='result-label'>Lokasi Kejadian</label>
@@ -165,6 +175,7 @@
                                 <td class='table-child' style='text-align:center'>$statusPelapor</td>
                                 <td class='table-child' style='text-align:center'>$namaKorban</td>
                                 <td class='table-child' style='text-align:center'>$namaPelaku</td>
+                                <td class='table-child' style='text-align:center'>$detailStatusPelaku</td>
                                 <td class='table-child' style='text-align:center'>$progressStatus</td>
                                 <td class='table-child' style='text-align:center'><button data-bs-toggle='offcanvas' data-bs-target='#$offcanvasId' data-bs-dokumen='' aria-controls='offcanvasRight'><i class='fa-solid fa-eye'></i></button></td>
                             </tr>";

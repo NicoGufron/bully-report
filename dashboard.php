@@ -26,19 +26,6 @@ if (!isset($_SESSION['username']) && !isset($_SESSION['id'])) {
     header('Location: index.php');
 }
 
-if (isset($_POST['save-changes'])) {
-    $assignTo = $_POST['assign-to'];
-    $progressReport = $_POST['progress-report'];
-    $nomorPengajuan = $_POST['nomor-pengajuan'];
-
-    if ($progressReport == "2") {
-        $assignTo = "0";
-    }
-
-    $sql = "UPDATE reports SET assign_to = '$assignTo', progress = '$progressReport' WHERE nomor_pengajuan = '$nomorPengajuan'";
-    $q = mysqli_query($conn, $sql);
-}
-
 $id = $_SESSION['id'];
 $usernameSession = $_SESSION['username'];
 $totalReports = 0;
@@ -65,9 +52,9 @@ $totalAssigned = mysqli_num_rows($qa);
     /// TODO buat tampilan untuk masing2 role admin
     /// Role admin:
     /// 1. Superadmin
-    /// 2. Perundungan Umum
-    /// 3. Kekerasan Seksual
-    /// 4. Intoleransi
+    /// 2. Dosen
+    /// 3. Tendik
+    /// 4. Mahasiswa
     ?>
     <div class="container-fluid">
         <section class="dashboard-section">
@@ -103,14 +90,15 @@ $totalAssigned = mysqli_num_rows($qa);
                 <table class="table table-striped table-hover" id="dataTable">
                     <thead>
                         <tr style="text-align: center" ;>
-                            <th style='text-align:center'>Nomor Pengajuan</th>
-                            <th style='text-align:center'>Jenis Kasus</th>
-                            <th style='text-align:center'>Nama Pelapor</th>
-                            <th style='text-align:center'>Status Pelapor</th>
-                            <th style='text-align:center'>Nama Korban</th>
-                            <th style='text-align:center'>Nama Pelaku</th>
-                            <th style='text-align:center'>Progress</th>
-                            <th style='text-align:center'>Details</th>
+                            <th style='text-align:center;font-size:0.875rem'>Nomor Pengajuan</th>
+                            <th style='text-align:center;font-size:0.875rem'>Jenis Kasus</th>
+                            <th style='text-align:center;font-size:0.875rem'>Nama Pelapor</th>
+                            <th style='text-align:center;font-size:0.875rem'>Status Pelapor</th>
+                            <th style='text-align:center;font-size:0.875rem'>Nama Korban</th>
+                            <th style='text-align:center;font-size:0.875rem'>Nama Pelaku</th>
+                            <th style='text-align:center;font-size:0.875rem'>Status Pelaku</th>
+                            <th style='text-align:center;font-size:0.875rem'>Progress</th>
+                            <th style='text-align:center;font-size:0.875rem'>Details</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -122,7 +110,20 @@ $totalAssigned = mysqli_num_rows($qa);
                         // 4 = baru
                         $counter = 1;
                         $offcanvas = "";
-                        $sql = "SELECT * FROM reports WHERE progress = '1' ORDER BY form_id DESC";
+
+                        $sql = "SELECT * FROM reports WHERE progress = '1'";
+
+                        if (isset($_SESSION['id']) && $_SESSION['id'] === "2") {
+                            $sql = $sql . " AND status_pelaku = '2'";
+                        } else if (isset($_SESSION['id']) && $_SESSION['id'] === "3") {
+                            $sql = $sql . " AND status_pelaku = '3'";
+                        } else if (isset($_SESSION['id']) && $_SESSION['id'] === "4") {
+                            $sql = $sql . " AND status_pelaku = '4'";
+                        }
+
+                        $sql = $sql . "ORDER BY form_id ASC";
+
+
                         $q = mysqli_query($conn, $sql);
                         while ($row = mysqli_fetch_assoc($q)) {
                             $namaPelapor = $row['nama_pelapor'];
@@ -140,6 +141,17 @@ $totalAssigned = mysqli_num_rows($qa);
                             $dampakKasus = $row['dampak_kasus'];
                             $jurusanKorban = $row['jurusan_korban'];
                             $namaPelaku = $row['nama_pelaku'];
+                            $statusPelaku = $row['status_pelaku'];
+
+                            $detailStatusPelaku = "";
+                            if ($statusPelaku === "2") {
+                                $detailStatusPelaku = "Dosen";
+                            } else if ($statusPelaku === "3") {
+                                $detailStatusPelaku = "Tendik (Tenaga Pendidik)";
+                            } else if ($statusPelaku === "4") {
+                                $detailStatusPelaku = "Mahasiswa";
+                            }
+
                             $waktuKejadian = $row['waktu_kejadian'];
                             $frekuenseiKejadian = $row['frekuensi_kejadian'];
                             $lokasiKejadian = $row['lokasi_kejadian'];
@@ -151,10 +163,18 @@ $totalAssigned = mysqli_num_rows($qa);
                             $progress = $row['progress'];
 
                             if ($progress === "1") {
-                                $progressStatus = "On Progress";
+                                $progressStatus = "Diterima";
                             } else if ($progress === "2") {
-                                $progressStatus = "Dibatalkan";
+                                $progressStatus = "On Progress - Rapat Tim Satgas";
                             } else if ($progress === "3") {
+                                $progressStatus = "Pertemuan dengan Pelapor";
+                            } else if ($progress === "4") {
+                                $progressStatus = "Sesi Diskusi";
+                            } else if ($progress === "5") { 
+                                $progressStatus = "Perekaman Bukti";
+                            } else if ($progress === "6") {
+                                $progressStatus = "Rapat Rektorat, CSD, Program Studi yang Terlibat, dan Satgas";
+                            } else if ($progres === "7") {
                                 $progressStatus = "Selesai";
                             }
 
@@ -168,24 +188,27 @@ $totalAssigned = mysqli_num_rows($qa);
 
                             $convertedWaktuKejadian = date('d M Y', strtotime($waktuKejadian));
 
-                            $assignmentSql = "SELECT * FROM accounts";
+                            // if ($_SESSION['id'] !== "1") {
+                            //     $assignmentSql = "SELECT * FROM accounts";
 
-                            $assignmentTop = "<label class='result-label'>Tugaskan kasus ini ke: </label>
-                            <select class='form-control custom-select' id='assign-to-$nomorPengajuan' name='assign-to'>";
-                            $assignmentMiddle = '';
 
-                            $result = mysqli_query($conn, $assignmentSql);
+                            //     $assignmentTop = "<label class='result-label'>Tugaskan kasus ini ke: </label>
+                            //         <select class='form-control custom-select' id='assign-to-$nomorPengajuan' name='assign-to'>";
+                            //     $assignmentMiddle = '';
+                            // }
 
-                            while ($accounts = mysqli_fetch_assoc($result)) {
-                                $id = $accounts['id'];
-                                $username = $accounts['username'];
+                            // $result = mysqli_query($conn, $assignmentSql);
 
-                                $assignmentMiddle .= "<option value='$id'>$username</option>";
-                            }
+                            // while ($accounts = mysqli_fetch_assoc($result)) {
+                            //     $id = $accounts['id'];
+                            //     $username = $accounts['username'];
 
-                            $assignmentEnd = "</select>";
+                            //     $assignmentMiddle .= "<option value='$id'>$username</option>";
+                            // }
 
-                            $assignment = $assignmentTop . $assignmentMiddle . $assignmentEnd;
+                            // $assignmentEnd = "</select>";
+
+                            // $assignment = $assignmentTop . $assignmentMiddle . $assignmentEnd;
 
                             $convertedDeskripsi = nl2br($deskripsiKejadian);
 
@@ -195,17 +218,19 @@ $totalAssigned = mysqli_num_rows($qa);
                                 <p class='nomor-pengajuan'>#$nomorPengajuan</p>
                             </span>
                             <span style='display: block'>
-                            <form method='post'>
+                            <form method='post' action='action.php'>
                                 <input type='hidden' name='nomor-pengajuan' value=$nomorPengajuan>
-                                <div style='display: flex;flex-direction: column;margin-right: 20px'>
-                                    $assignment
-                                </div>
                                 <div style='display: flex;flex-direction: column'>
                                     <label class='result-label'>Status Kasus: </label>
                                     <select class='form-control custom-select' name='progress-report'>
-                                        <option value='1'>On Progress</option>
-                                        <option value='2'>Dibatalkan</option>
-                                        <option value='3'>Selesai</option>
+
+                                        <option value='1'>Diterima</option>
+                                        <option value='2'>On Progress - Rapat Tim Satgas</option>
+                                        <option value='3'>Pertemuan dengan Pelapor</option>
+                                        <option value='4'>Sesi Diskusi</option>
+                                        <option value='5'>Perekaman Bukti</option>
+                                        <option value='6'>Rapat Rektorat, CSD, Program Studi yang Terlibat, dan Satgas</option>
+                                        <option value='7'>Selesai</option>
                                     </select>
                                     </div>
                                 <input name='save-changes' type='submit' class='submit-button' value='Simpan Perubahan'>
@@ -231,6 +256,8 @@ $totalAssigned = mysqli_num_rows($qa);
                             <p>$jurusanKorban</p>
                             <label class='result-label'>Nama Pelaku</label>
                             <p>$namaPelaku</p>
+                            <label class='result-label'>Status Pelaku</label>
+                            <p>$detailStatusPelaku</p>
                             <label class='result-label'>Bukti Kejadian</label>
                             <p>$buktiKejadian</p>
                             <label class='result-label'>Waktu Kejadian</label>
@@ -250,6 +277,7 @@ $totalAssigned = mysqli_num_rows($qa);
                                 <td class='table-child' style='text-align:center'>$statusPelapor</td>
                                 <td class='table-child' style='text-align:center'>$namaKorban</td>
                                 <td class='table-child' style='text-align:center'>$namaPelaku</td>
+                                <td class='table-child' style='text-align:center'>$detailStatusPelaku</td>
                                 <td class='table-child' style='text-align:center'>$progressStatus</td>
                                 <td class='table-child' style='text-align:center'><button data-bs-toggle='offcanvas' data-bs-target='#$offcanvasId' data-bs-dokumen='' aria-controls='offcanvasRight'><i class='fa-solid fa-eye'></i></button></td>
                             </tr>";
