@@ -159,7 +159,7 @@
                             <label class='result-label'>Bukti Kejadian</label>
                             <p>$buktiKejadian</p>
                             <label class='result-label'>Waktu Kejadian</label>
-                            <p>$$arrayKejadian</p>
+                            <p>$arrayKejadian</p>
                             <label class='result-label'>Frekuensi Kejadian</label>
                             <p>$frekuenseiKejadian</p>
                             <label class='result-label'>Lokasi Kejadian</label>

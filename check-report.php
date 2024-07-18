@@ -43,6 +43,17 @@ if ($_POST) {
             $dampakKasus = $row['dampak_kasus'];
             $jurusanKorban = $row['jurusan_korban'];
             $namaPelaku = $row['nama_pelaku'];
+            $statusPelaku = $row['status_pelaku'];
+
+            $detailStatusPelaku = "";
+            if ($statusPelaku === "2") {
+                $detailStatusPelaku = "Dosen";
+            } else if ($statusPelaku === "3") {
+                $detailStatusPelaku = "Tendik (Tenaga Pendidik)";
+            } else if ($statusPelaku === "4") {
+                $detailStatusPelaku = "Mahasiswa";
+            }
+
             $waktuKejadian = $row['waktu_kejadian'];
             $frekuenseiKejadian = $row['frekuensi_kejadian'];
             $lokasiKejadian = $row['lokasi_kejadian'];
@@ -50,7 +61,7 @@ if ($_POST) {
             $buktiKejadian = $row['bukti_kejadian'];
             $progress = $row['progress'];
 
-            $progressReport = "";
+            $progressStatus = "";
 
             if ($progress === "1") {
                 $progressStatus = "Diterima";
@@ -68,7 +79,14 @@ if ($_POST) {
                 $progressStatus = "Selesai";
             }
 
-            $convertedWaktuKejadian = date('d M Y', strtotime($waktuKejadian));
+            $convertedWaktuKejadian = explode(",", $waktuKejadian);
+            $arrayKejadian = "";
+            $con = 1;
+
+            for ($i = 0; $i < count($convertedWaktuKejadian); $i++) {
+                $arrayKejadian .= nl2br("Kejadian $con : ".date('D, d M Y', strtotime($convertedWaktuKejadian[$i]))."\n");
+                $con++;
+            }
 
             $convertedDeskripsi = nl2br($deskripsiKejadian);
 
@@ -83,43 +101,48 @@ if ($_POST) {
                 $result = "
                 <div class='result-form'>
                     <span class='top-form'>
-                        <div style='display: flex;flex-direction: column'>
+                        <div style='display: flex;flex-direction: column;align-items: flex-start'>
                             <h5 class='title' style='text-align:center'>LAPORAN PERUNDUNGAN</h5>
-                            <p class='subtitle'>Status: <strong>$progressReport</strong></p> 
+                            <p class='subtitle'>Status: <strong>$progressStatus</strong></p> 
                         </div>
                         <p class='nomor-pengajuan'>#$nomorPengajuan</p>
                     </span>
-                    <label class='result-label'>Jenis Kasus</label>
-                    <p>$jenisKasus</p>
-                    <label class='result-label'>Status Pelapor</label>
-                    <p>$statusPelapor</p>
-                    <label class='result-label'>Nama Korban</label>
-                    <p>$namaKorban</p>
-                    <label class='result-label'>NIM Korban</label>
-                    <p>$nimKorban</p>
-                    <label class='result-label'>Dampak Kasus</label>
-                    <p>$dampakKasus</p>
-                    <label class='result-label'>Jurusan Korban</label>
-                    <p>$jurusanKorban</p>
-                    <label class='result-label'>Nama Pelaku</label>
-                    <p>$namaPelaku</p>
-                    <label class='result-label'>Bukti Kejadian</label>
-                    <p>$buktiKejadian</p>
-                    <label class='result-label'>Waktu Kejadian</label>
-                    <p>$convertedWaktuKejadian</p>
-                    <label class='result-label'>Frekuensi Kejadian</label>
-                    <p>$frekuenseiKejadian</p>
-                    <label class='result-label'>Lokasi Kejadian</label>
-                    <p>$lokasiKejadian</p>
-                    <label class='result-label'>Deskripsi Kejadian</label>
-                    <p>$convertedDeskripsi</p>
+                    <div style='height: 1px; border: 0.5px solid black'></div>
+                    <div style='padding: 2.5% 5%'>
+                        <label class='result-label'>Jenis Kasus</label>
+                        <p>$jenisKasus</p>
+                        <label class='result-label'>Status Pelapor</label>
+                        <p>$statusPelapor</p>
+                        <label class='result-label'>Nama Korban</label>
+                        <p>$namaKorban</p>
+                        <label class='result-label'>NIM Korban</label>
+                        <p>$nimKorban</p>
+                        <label class='result-label'>Dampak Kasus</label>
+                        <p>$dampakKasus</p>
+                        <label class='result-label'>Jurusan Korban</label>
+                        <p>$jurusanKorban</p>
+                        <label class='result-label'>Nama Pelaku</label>
+                        <p>$namaPelaku</p>
+                        <label class='result-label'>Status Pelaku</label>
+                        <p>$detailStatusPelaku</p>
+                        <label class='result-label'>Bukti Kejadian</label>
+                        <p>$buktiKejadian</p>
+                        <label class='result-label'>Waktu Kejadian</label>
+                        <p>$arrayKejadian</p>
+                        <label class='result-label'>Frekuensi Kejadian</label>
+                        <p>$frekuenseiKejadian</p>
+                        <label class='result-label'>Lokasi Kejadian</label>
+                        <p>$lokasiKejadian</p>
+                        <label class='result-label'>Deskripsi Kejadian</label>
+                        <p>$convertedDeskripsi</p>
+                    </div>
                 </div>
             ";
             } else if ($namaPelapor !== "") {
                 $result = "
                 <div class='result-form'>
                     <span class='top-form'>
-                        <div style='display: flex;flex-direction: column'>
+                        <div style='display: flex;flex-direction: column;align-items:flex-start'>
                             <h5 class='title' style='text-align:center'>LAPORAN PERUNDUNGAN</h5>
                             <p class='subtitle'>Status: <strong>$progressReport</strong></p> 
                         </div>

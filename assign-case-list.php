@@ -34,13 +34,13 @@
                 <div class="accordion">
                     <?php
                     $counter = 1;
-                    $sql = "SELECT * FROM reports WHERE progress = '2' OR progress = '3' OR progress = '4' OR progress = '5' OR progress = '6'";
+                    $sql = "SELECT * FROM reports WHERE (progress = '2' OR progress = '3' OR progress = '4' OR progress = '5' OR progress = '6')";
                     if (isset($_SESSION['role']) && $_SESSION['role'] === "2") {
-                        $sql = $sql . "AND status_pelaku = 2";
+                        $sql = $sql . " AND status_pelaku = '2'";
                     } else if ($isset($_SESSION['role'] && $_SESSION['role'] === "3")) {
-                        $sql = $sql . "AND status_pelaku = 3";
+                        $sql = $sql . " AND status_pelaku = '3'";
                     } else if ($isset($_SESSION['role'] && $_SESSION['role'] === "4")) {
-                        $sql = $sql . "AND status_pelaku = 4";
+                        $sql = $sql . " AND status_pelaku = '4'";
                     }
 
                     $q = mysqli_query($conn, $sql);
@@ -61,6 +61,17 @@
                         $dampakKasus = $row['dampak_kasus'];
                         $jurusanKorban = $row['jurusan_korban'];
                         $namaPelaku = $row['nama_pelaku'];
+                        $statusPelaku = $row['status_pelaku'];
+
+                        $detailStatusPelaku = "";
+                        if ($statusPelaku === "2") {
+                            $detailStatusPelaku = "Dosen";
+                        } else if ($statusPelaku === "3") {
+                            $detailStatusPelaku = "Tendik (Tenaga Pendidik)";
+                        } else if ($statusPelaku === "4") {
+                            $detailStatusPelaku = "Mahasiswa";
+                        }
+
                         $waktuKejadian = $row['waktu_kejadian'];
                         $frekuenseiKejadian = $row['frekuensi_kejadian'];
                         $lokasiKejadian = $row['lokasi_kejadian'];
@@ -148,6 +159,8 @@
                                         <p>$jurusanKorban</p>
                                         <label class='result-label'>Nama Pelaku</label>
                                         <p>$namaPelaku</p>
+                                        <label class='result-label'>Status Pelaku</label>
+                                        <p>$detailStatusPelaku</p>
                                         <label class='result-label'>Bukti Kejadian</label>
                                         <p>$buktiKejadian</p>
                                         <label class='result-label'>Waktu Kejadian</label>

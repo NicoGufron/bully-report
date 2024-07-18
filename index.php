@@ -85,7 +85,7 @@ $jawaban = [
             </div>
             <div class="hotline">
                 <div class="hotline-box">
-                    <h4>Hubungi Hotline (Telepon atau Whatsapp)</h4>
+                    <h4 style="text-align:center; font-size:1.2rem; line-height: 40px;">Hubungi Hotline (Telepon atau Whatsapp)</h4>
                     <span style="display: flex; flex-direction:row;align-items: baseline">
                         <i class="fa-solid fa-phone fa-lg" style="padding-right: 20px"></i>
                         <h4>0812-3456-7890</h4>

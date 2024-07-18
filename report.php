@@ -138,7 +138,7 @@ if (isset($_GET['message']) && isset($_GET['code']) && isset($_GET['role'])) {
                         <input class="form-control" type="text" name="email-pelapor" required>
 
                         <div style="display: flex; flex-direction:column;margin-top: 50px">
-                            <div class='notice' style='display: flex;flex-direction: row; align-items: baseline; background-color: #ff9595; color:black; padding: 2.5%'>
+                            <div class='notice' style='display: flex;flex-direction: row; align-items: baseline; background-color: #ff9595; color:black; padding: 2.5%; border: 1px solid #711d1d'>
                                 <i class="fa-solid fa-circle-info" style="padding-left: 10px;padding-right: 10px"></i>
                                 <p>Mohon untuk mengecek kembali laporan anda! Laporan yang sudah diajukan tidak bisa diubah!</p>
                             </div>

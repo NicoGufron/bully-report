@@ -18,6 +18,7 @@ function sendMail($to)
 
         // Sandbox Mailtrap
         // $mail->Host = 'sandbox.smtp.mailtrap.io';
+        // $mail->SMTPAuth = true;
         // $mail->Port = 2525;
         // $mail->Username = $env['SANDBOX_MAILTRAP_USERNAME'];
         // $mail->Password = $env['SANDBOX_MAILTRAP_PASSWORD'];
